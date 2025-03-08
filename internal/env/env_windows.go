@@ -72,3 +72,34 @@ func UpdateUserEnvironmentVariable(key, value string) error {
 
 	return k.SetStringValue(key, value)
 }
+
+// query user level environment variable
+func QueryUserEnvironmentVariable(key string) (string, error) {
+	k, err := registry.OpenKey(registry.CURRENT_USER, USER_PATH, registry.QUERY_VALUE)
+	if err != nil {
+		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
+	}
+	defer k.Close()
+
+	value, _, err := k.GetStringValue(key)
+	if err != nil {
+		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
+	}
+
+	return value, nil
+}
+
+// query system level environment variable
+func QuerySystemEnvironmentVariable(key string) (string, error) {
+	k, err := registry.OpenKey(registry.LOCAL_MACHINE, SYSTEM_PATH, registry.QUERY_VALUE)
+	if err != nil {
+		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
+	}
+	defer k.Close()
+
+	value, _, err := k.GetStringValue(key)
+	if err != nil {
+		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
+	}
+	return value, nil
+}
