@@ -2,14 +2,12 @@ package config
 
 import (
 	"encoding/json"
+	"jenv-go/internal/constants"
 	"jenv-go/internal/env"
 	"os"
 	"path/filepath"
 	"runtime"
 )
-
-const DEFAULT_FOLDER = ".jdks"
-const DEFAULT_BACKUP_FILE = "backup.json"
 
 // PathBackup represents the structure for backing up PATH environment variables
 type PathBackup struct {
@@ -17,9 +15,9 @@ type PathBackup struct {
 	SystemPath string `json:"system_path,omitempty"`
 }
 
-// BackupPath creates a backup of the PATH environment variables
+// BackupEnvPath creates a backup of the PATH environment variables
 // On Windows, it backs up both user and system PATH variables
-func BackupPath() error {
+func BackupEnvPath() error {
 	// Get user home directory
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -27,7 +25,7 @@ func BackupPath() error {
 	}
 
 	// Create .jdks directory if it doesn't exist
-	jdksDir := filepath.Join(home, DEFAULT_FOLDER)
+	jdksDir := filepath.Join(home, constants.DEFAULT_FOLDER)
 	if err := os.MkdirAll(jdksDir, 0755); err != nil {
 		return err
 	}
@@ -59,7 +57,7 @@ func BackupPath() error {
 	}
 
 	// Write to backup.json file
-	backupPath := filepath.Join(jdksDir, DEFAULT_BACKUP_FILE)
+	backupPath := filepath.Join(jdksDir, constants.DEFAULT_BACKUP_FILE)
 	return os.WriteFile(backupPath, data, 0644)
 }
 
@@ -72,7 +70,7 @@ func RestorePathFromBackup() error {
 	}
 
 	// Check if backup file exists
-	backupPath := filepath.Join(home, ".jdks", DEFAULT_BACKUP_FILE)
+	backupPath := filepath.Join(home, ".jdks", constants.DEFAULT_BACKUP_FILE)
 	data, err := os.ReadFile(backupPath)
 	if err != nil {
 		return err
@@ -104,4 +102,25 @@ func RestorePathFromBackup() error {
 	}
 
 	return nil
+}
+
+// userPath, or systemPath update
+//
+//	func UpdateBackUp(key string, value string) {
+//		backup, err := getBackupPath()
+//		if err == null {
+//			 if(key=="userpath")
+//		}
+//
+// }
+func GetDefaultBackupFilePath() string {
+	// Get user home directory
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+
+	// Check if backup file exists
+	backupPath := filepath.Join(home, ".jdks", constants.DEFAULT_BACKUP_FILE)
+	return backupPath
 }
