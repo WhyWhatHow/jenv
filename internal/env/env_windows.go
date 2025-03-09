@@ -5,12 +5,14 @@ package env
 import (
 	"fmt"
 	"golang.org/x/sys/windows/registry"
+	"jenv-go/internal/constants"
+	"jenv-go/internal/sys"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-const SYSTEM_PATH = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
+//const ENV_SYSTEM_PATH = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 
 // SetSystemPath 永久设置系统 PATH 环境变量 (Windows 平台实现)
 func SetSystemPath(path string) error {
@@ -36,12 +38,12 @@ func SetSystemPath(path string) error {
 
 func UpdateSystemEnvironmentVariable(key, value string) error {
 
-	if !IsAdmin() {
+	if !sys.IsAdmin() {
 		return fmt.Errorf("please run this command with admin privileges")
 	}
 
 	// 需要管理员权限设置系统环境变量 system
-	k, err := registry.OpenKey(registry.LOCAL_MACHINE, SYSTEM_PATH, registry.SET_VALUE)
+	k, err := registry.OpenKey(registry.LOCAL_MACHINE, constants.ENV_SYSTEM_PATH, registry.SET_VALUE)
 	if err != nil {
 		return fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
 	}
@@ -59,12 +61,12 @@ const USER_PATH = `Environment`
  * @param value
  */
 func UpdateUserEnvironmentVariable(key, value string) error {
-	if !IsAdmin() {
+	if !sys.IsAdmin() {
 		return fmt.Errorf("please run this command with admin privileges")
 	}
 	// 需要管理员权限设置系统环境变量 system
-	k, err := registry.OpenKey(registry.CURRENT_USER, USER_PATH, registry.SET_VALUE)
-	//k, err := registry.OpenKey(registry.CURRENT_USER, USER_PATH, registry.SET_VALUE)
+	k, err := registry.OpenKey(registry.CURRENT_USER, constants.ENV_USER_PATH, registry.SET_VALUE)
+	//k, err := registry.OpenKey(registry.CURRENT_USER, constants.ENV_USER_PATH, registry.SET_VALUE)
 	if err != nil {
 		return fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
 	}
@@ -91,7 +93,7 @@ func QueryUserEnvironmentVariable(key string) (string, error) {
 
 // query system level environment variable
 func QuerySystemEnvironmentVariable(key string) (string, error) {
-	k, err := registry.OpenKey(registry.LOCAL_MACHINE, SYSTEM_PATH, registry.QUERY_VALUE)
+	k, err := registry.OpenKey(registry.LOCAL_MACHINE, constants.ENV_SYSTEM_PATH, registry.QUERY_VALUE)
 	if err != nil {
 		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
 	}
