@@ -35,7 +35,6 @@ func TestRunAdd(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			force = tt.force
 			runAdd(nil, tt.args)
 			if tt.wantErr {
 				//assert.Error(t, err)
