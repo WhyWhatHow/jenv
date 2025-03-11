@@ -20,11 +20,8 @@ by providing a name and the path to the JDK installation directory.`,
 	Run:  runAdd,
 }
 
-var force bool
-
 func init() {
 	rootCmd.AddCommand(addCmd)
-	//addCmd.Flags().BoolVarP(&force, "force", "f", false, "Force add/update JDK")
 }
 
 func runAdd(cmd *cobra.Command, args []string) {
@@ -33,9 +30,9 @@ func runAdd(cmd *cobra.Command, args []string) {
 
 	// Add JDK
 	if err := java.AddJDK(name, path); err != nil {
-		fmt.Errorf("failed to add JDK: %v", err)
+		fmt.Printf("failed to add JDK: %v\n", err)
+		return
 	}
 
 	fmt.Printf("Successfully added JDK: %s -> %s\n", name, path)
-
 }

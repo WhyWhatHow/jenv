@@ -28,7 +28,7 @@ func RunList(cmd *cobra.Command, args []string) {
 	// Get all JDKs
 	jdks, err := java.ListJdks()
 	if err != nil {
-		fmt.Errorf("failed to get JDK list %v", err)
+		fmt.Printf("failed to get JDK list: %v\n", err)
 		return
 	}
 
