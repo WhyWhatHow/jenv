@@ -7,31 +7,54 @@ import (
 	"golang.org/x/sys/windows/registry"
 	"jenv-go/internal/constants"
 	"jenv-go/internal/sys"
-	"os"
-	"path/filepath"
-	"strings"
+	"runtime"
 )
 
 //const ENV_SYSTEM_PATH = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 
-// SetSystemPath 永久设置系统 PATH 环境变量 (Windows 平台实现)
-func SetSystemPath(path string) error {
-	// 获取当前的 PATH
-	currentPath := os.Getenv("PATH")
+func getDefaultJAVAHOME() string {
+	if runtime.GOOS == "windows" {
+		return constants.ENV_WIN_JAVA_HOME
+	} else {
+		return constants.ENV_LINUX_JAVA_HOME
 
-	// 如果新路径不在当前 PATH 中，则添加它
-	if !strings.Contains(currentPath, path) {
-		// 将新路径添加到 PATH 的开头
-		newPath := path
-		if currentPath != "" {
-			newPath = path + string(filepath.ListSeparator) + currentPath
-		}
-
-		// 更新系统环境变量
-		return UpdateSystemEnvironmentVariable("PATH", newPath)
 	}
-
+}
+func SetEnvInWin(key, value string) error {
+	err := UpdateSystemEnvironmentVariable(key, value)
+	if err != nil {
+		return err
+	}
+	err1 := UpdateUserEnvironmentVariable(key, value)
+	if err1 != nil {
+		return err1
+	}
 	return nil
+}
+
+// SetSystemPath 永久设置系统 PATH 环境变量 (Windows 平台实现)
+func SetSystemEnvPath() error {
+	// 获取当前的 PATH
+	currentPath, err := QuerySystemEnvironmentVariable("PATH")
+	if err != nil {
+		return err
+	}
+	defaultJavaHome := getDefaultJAVAHOME()
+	var newPath = defaultJavaHome + currentPath
+	return UpdateSystemEnvironmentVariable("PATH", newPath)
+}
+
+func SetCurrentUserEnvPath() error {
+	// 获取当前的 PATH
+	currentPath, err := QueryUserEnvironmentVariable("PATH")
+	if err != nil {
+		return err
+	}
+	defaultJavaHome := getDefaultJAVAHOME()
+	var newPath = defaultJavaHome + currentPath
+	// 更新系统环境变量
+	return UpdateUserEnvironmentVariable("PATH", newPath)
+
 }
 
 // UpdateSystemEnvironmentVariable 更新 Windows 系统环境变量
