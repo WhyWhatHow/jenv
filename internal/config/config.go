@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"jenv-go/internal/constants"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -15,7 +16,7 @@ var (
 	ErrJDKExists            = errors.New("JDK already exists")
 	ErrJDKNotFound          = errors.New("JDK not found")
 	ErrInvalidPath    error = errors.New("Invalid Java installation path")
-	ErrNotInitialized       = errors.New("Jenv-go not initialized")
+	ErrNotInitialized       = errors.New("jenvnot initialized")
 )
 
 var (
@@ -78,17 +79,17 @@ func loadConfigFromFile() (*Config, error) {
 		// 如果不存在，则创建默认配置
 		// 默认backupFilepath 与configFilePath 在同一个folder
 		backupFilePath := GetDefaultBackupFilePath()
-
+		defaultSymlinkPath := GetDefaultSymlinkPath()
 		cfg := &Config{
 			Current:       "",
-			SymlinkPath:   constants.DEFAULT_SYMLINK_PATH,
+			SymlinkPath:   defaultSymlinkPath,
 			Initialized:   false,
 			EnvBackUpPath: backupFilePath,
 			Jdks:          make(map[string]JDK), // 初始化 map
 		}
 
 		// 保存配置到文件
-		if err := cfg.Save(); err != nil {
+		if err := cfg.doSave(); err != nil {
 			return nil, fmt.Errorf("保存配置文件失败: %w", err)
 		}
 
@@ -107,11 +108,15 @@ func loadConfigFromFile() (*Config, error) {
 	}
 	return &cfg, nil
 }
-
-// Save 保存配置到文件
 func (c *Config) Save() error {
-	c.lock.RLock()
-	defer c.lock.RUnlock()
+	// 获取锁，防止并发修改
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	return c.doSave()
+}
+
+// doSave 保存配置到文件
+func (c *Config) doSave() error {
 
 	path, err := GetConfigPath()
 	if err != nil {
@@ -137,6 +142,7 @@ func (c *Config) SetSymlinkPath(symlinkPath string) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	c.SymlinkPath = symlinkPath
+	c.doSave()
 }
 
 // SetCurrentJDK 设置当前JDK
@@ -150,8 +156,7 @@ func (c *Config) SetCurrentJDK(jdkName string) error {
 	}
 
 	c.Current = jdkName
-	c.lock.Unlock()
-	return c.Save()
+	return c.doSave()
 }
 
 // AddJDK 添加新的JDK
@@ -173,8 +178,7 @@ func (c *Config) AddJDK(name, path string) error {
 	c.Jdks[name] = JDK{Name: name, Path: path}
 
 	// 保存更新后的配置到文件
-	c.lock.Unlock()
-	return c.Save()
+	return c.doSave()
 }
 
 // RemoveJDK 移除JDK
@@ -194,8 +198,9 @@ func (c *Config) RemoveJDK(name string) error {
 	if c.Current == name {
 		c.Current = ""
 	}
-	c.lock.Unlock()
-	return c.Save()
+
+	// 保存更新后的配置到文件
+	return c.doSave()
 }
 
 // 保留原有的工具函数
@@ -214,7 +219,15 @@ func ValidateJavaPath(path string) bool {
 }
 
 func GetDefaultSymlinkPath() string {
-	return constants.DEFAULT_SYMLINK_PATH
+	if runtime.GOOS == "windows" {
+		return constants.DEFAULT_SYMLINK_PATH
+	}
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		log.Printf("Failed to get user home directory: %v", err)
+		return ""
+	}
+	return filepath.Join(dir, constants.DEFAULT_SYMLINK_NAME)
 }
 
 // CreateSymlink creates a symbolic link from source to target
@@ -231,7 +244,6 @@ func CreateSymlink(source, target string) error {
 	return os.Symlink(source, target)
 }
 
-// ISSUE [whywhathow] [2025/3/9] [must]useless method
 // SetConfigPath sets a custom path for the config file
 func SetConfigPath(path string) {
 	instanceLock.Lock()
@@ -279,7 +291,7 @@ func InitializeConfig(configFilePath string) error {
 		}
 
 		// 保存配置到文件
-		if err := cfg.Save(); err != nil {
+		if err := cfg.doSave(); err != nil {
 			return fmt.Errorf("保存配置文件失败: %v", err)
 		}
 	}
