@@ -30,6 +30,13 @@ func BackupEnvPath() error {
 		return err
 	}
 
+	// Check if backup file already exists
+	backupPath := filepath.Join(jdksDir, constants.DEFAULT_BACKUP_FILE)
+	if _, err := os.Stat(backupPath); err == nil {
+		// Backup file already exists, no need to create it again
+		return nil
+	}
+
 	// Create backup structure
 	backup := PathBackup{}
 
@@ -57,7 +64,6 @@ func BackupEnvPath() error {
 	}
 
 	// Write to backup.json file
-	backupPath := filepath.Join(jdksDir, constants.DEFAULT_BACKUP_FILE)
 	return os.WriteFile(backupPath, data, 0644)
 }
 
