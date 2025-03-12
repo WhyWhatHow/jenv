@@ -1,0 +1,6 @@
+*.py
+.idea/
+*.txt
+.vscode/
+test_createSymLink.go
+guide.md
