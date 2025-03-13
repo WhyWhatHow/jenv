@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"jenv-go/internal/java"
-
 	"github.com/spf13/cobra"
+	"github.com/whywhathow/jenv/internal/java"
 )
 
 var addCmd = &cobra.Command{

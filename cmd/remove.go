@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"jenv-go/internal/java"
+	"github.com/whywhathow/jenv/internal/java"
 
 	"github.com/spf13/cobra"
 )

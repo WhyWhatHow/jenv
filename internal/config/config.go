@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"jenv-go/internal/constants"
+	"github.com/whywhathow/jenv/internal/constants"
 	"log"
 	"os"
 	"path/filepath"
