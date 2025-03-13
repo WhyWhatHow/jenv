@@ -84,7 +84,6 @@ func init() {
 	}
 
 	// Initialize configuration system
-	fmt.Println(style.Header.Render("Initializing jenv..."))
 	cfg, err := config.GetInstance()
 	if err != nil {
 		fmt.Printf("%s: %s\n%s\n",
