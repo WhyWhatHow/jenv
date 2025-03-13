@@ -2,8 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"jenv-go/internal/constants"
-	"jenv-go/internal/env"
+	"github.com/whywhathow/jenv/internal/constants"
+	"github.com/whywhathow/jenv/internal/env"
 	"os"
 	"path/filepath"
 	"runtime"

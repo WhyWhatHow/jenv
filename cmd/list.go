@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"jenv-go/internal/java"
+	"github.com/whywhathow/jenv/internal/java"
 	"os"
 	"text/tabwriter"
 
@@ -27,6 +27,7 @@ func init() {
 func RunList(cmd *cobra.Command, args []string) {
 	// Get all JDKs
 	jdks, err := java.ListJdks()
+
 	if err != nil {
 		fmt.Printf("failed to get JDK list: %v\n", err)
 		return

@@ -4,9 +4,9 @@ package env
 
 import (
 	"fmt"
+	"github.com/whywhathow/jenv/internal/constants"
+	"github.com/whywhathow/jenv/internal/sys"
 	"golang.org/x/sys/windows/registry"
-	"jenv-go/internal/constants"
-	"jenv-go/internal/sys"
 	"runtime"
 )
 

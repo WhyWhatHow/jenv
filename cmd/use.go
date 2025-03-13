@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"jenv-go/internal/java"
+	"github.com/whywhathow/jenv/internal/java"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ This command will set the specified JDK as the current Java version
 for your environment.`,
 		Example: "  jenv use jdk8",
 		Args:    cobra.ExactArgs(1),
-		Run:     runUse,
+		Run:     RunUse,
 	}
 )
 
@@ -25,7 +25,7 @@ func init() {
 	rootCmd.AddCommand(useCmd)
 }
 
-func runUse(cmd *cobra.Command, args []string) {
+func RunUse(cmd *cobra.Command, args []string) {
 	name := args[0]
 
 	// Switch JDK
