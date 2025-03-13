@@ -30,7 +30,8 @@ type Config struct {
 	SymlinkPath   string         `json:"symlink_path"`
 	Initialized   bool           `json:"initialized"`
 	EnvBackUpPath string         `json:"env_backup_path"`
-	Jdks          map[string]JDK `json:"jdks"` // 将数组改为 map
+	Jdks          map[string]JDK `json:"jdks"`  // 将数组改为 map
+	Theme         string         `json:"theme"` // Current theme name
 	// 添加互斥锁保护并发访问
 	lock sync.RWMutex
 }
