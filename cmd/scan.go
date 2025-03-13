@@ -4,17 +4,20 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/whywhathow/jenv/internal/java"
+	"github.com/whywhathow/jenv/internal/style"
+	"strings"
 )
 
 var (
 	scanCmd = &cobra.Command{
+
 		Use:   "scan <dir>",
 		Short: "Scan a directory for JDKs (max depth: 3 subdirectories)",
 		Long: `Scan a specified directory for JDK installations and add them to jenv's config.
 
 Directory Depth Limit:
 The scan will only check subdirectories up to 3 levels deeper than the start directory.
-For example, if scanning from "C:\":
+For example, if scanning from "C:":
   C:\                     (start)
   ├── Program Files      (depth 1)
   │   └── Java          (depth 2)
@@ -42,24 +45,52 @@ func init() {
 func runScan(cmd *cobra.Command, args []string) {
 	dir := args[0]
 
-	jdks := java.ScanJDK(dir)
+	// 显示扫描标题
+	header := style.Header.Render("🔍 Scanning directory: ") + style.Path.Render(dir)
+	fmt.Println(header + "\n" + strings.Repeat("─", 50))
 
-	// Add each JDK to config
-	for _, jdk := range jdks {
-		fmt.Printf("Found JDK at: %s\n", jdk.Path)
+	jdks := java.ScanJDK(dir)
+	successCount := 0
+	skipCount := 0
+
+	for i, jdk := range jdks {
+		// 显示带编号的JDK发现信息
+		fmt.Printf("\n%s %s\n",
+			style.Name.Render(fmt.Sprintf("#%02d", i+1)),
+			style.Path.Render(jdk.Path))
+
+		// 带样式的输入提示
+		prompt := style.Input.Render("⇨ Enter a name for this JDK (e.g. jdk11, jdk21-azul): ")
+		fmt.Print(prompt + " ")
+
 		var name string
-		fmt.Print("Enter a name for this JDK (e.g. jdk11, jdk21-azul): ")
 		fmt.Scanln(&name)
 
 		if name == "" {
-			fmt.Println("Skipping unnamed JDK")
+			fmt.Println(style.Input.Render("↪ Skipping unnamed JDK"))
+			skipCount++
 			continue
 		}
 
 		if err := java.AddJDK(name, jdk.Path); err != nil {
-			fmt.Printf("Failed to add JDK: %v\n", err)
+			fmt.Printf("%s: %v\n",
+				style.Error.Render("✖ Failed to add JDK"),
+				style.Error.Render(err.Error()))
 		} else {
-			fmt.Printf("Successfully added JDK: %s -> %s\n", name, jdk.Path)
+			fmt.Printf("%s: %s → %s\n\n",
+				style.Success.Render("✔ Added JDK"),
+				style.Success.Render(name),
+				style.Path.Render(jdk.Path))
+			successCount++
 		}
 	}
+
+	// 显示统计信息
+	summary := fmt.Sprintf("\n%s\n%s: %d\n%s: %d\n%s: %d",
+		style.Header.Render("Scan Complete!"),
+		style.Name.Render("Total Found"), len(jdks),
+		style.Success.Render("Successfully Added"), successCount,
+		style.Error.Render("Skipped"), skipCount)
+
+	fmt.Println(summary)
 }
