@@ -2,14 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/whywhathow/jenv/internal/java"
-	"os"
-	"text/tabwriter"
-
 	"github.com/spf13/cobra"
+	"github.com/whywhathow/jenv/internal/java"
+	"github.com/whywhathow/jenv/internal/style"
 )
 
 var currentCmd = &cobra.Command{
+
 	Use:   "current",
 	Short: "Show the current JDK",
 	Long: `Show the current JDK configuration.
@@ -28,16 +27,19 @@ func runCurrent(cmd *cobra.Command, args []string) {
 	// Get current JDK
 	currentJDK, err := java.GetCurrentJDK()
 	if err != nil {
-		fmt.Println("No JDK is currently configured.")
-		fmt.Println("Please use 'jenv use <name>' to set a JDK first.")
+		fmt.Println(style.Error.Render("No JDK is currently configured."))
+		fmt.Println(style.Input.Render("Please use 'jenv use <name>' to set a JDK first."))
 		return
 	}
 
-	//TODO [whywhathow] [2025/3/12]  [opt] 找第三方库 更好的输出到Terminal
+	// Display header
+	fmt.Println(style.Header.Render("Current JDK Configuration"))
 
-	// Use tabwriter for formatted output
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(w, "NAME\tPATH")
-	fmt.Fprintf(w, "%s\t%s\n", currentJDK.Name, currentJDK.Path)
-	w.Flush()
+	// Display current JDK info
+	fmt.Printf("%s: %s\n",
+		style.Name.Render("Name"),
+		style.Current.Render(currentJDK.Name))
+	fmt.Printf("%s: %s\n",
+		style.Name.Render("Path"),
+		style.Current.Render(currentJDK.Path))
 }

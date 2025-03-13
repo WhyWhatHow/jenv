@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/whywhathow/jenv/internal/java"
-	"os"
-	"text/tabwriter"
-
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"github.com/whywhathow/jenv/internal/config"
+	"github.com/whywhathow/jenv/internal/java"
+	"github.com/whywhathow/jenv/internal/style"
+	"os"
+	"sort"
 )
 
 var listCmd = &cobra.Command{
@@ -25,37 +27,64 @@ func init() {
 }
 
 func RunList(cmd *cobra.Command, args []string) {
-	// Get all JDKs
 	jdks, err := java.ListJdks()
-
 	if err != nil {
-		fmt.Printf("failed to get JDK list: %v\n", err)
+		fmt.Println(style.Error.Render("Error:"), style.Error.Render(err.Error()))
 		return
 	}
 
 	if len(jdks) == 0 {
-		fmt.Println("No JDKs are currently registered")
+		fmt.Println(style.Path.Render("＞ No JDKs registered"))
 		return
 	}
 
-	// Get current JDK
+	// Get current JDK and sort
 	currentJDK, err := java.GetCurrentJDK()
-	currentName := ""
+	// Display current JDK info if available
 	if err == nil {
-		currentName = currentJDK.Name
+		fmt.Printf("\n%s\n", style.Header.Render("Current JDK"))
+		fmt.Printf("%s: %s\n", style.Name.Render("Name"), style.Current.Render(currentJDK.Name))
+		fmt.Printf("%s: %s\n\n", style.Name.Render("Path"), style.Path.Render(currentJDK.Path))
 	}
 
-	// Use tabwriter for formatted output
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-	fmt.Fprintln(w, "NAME\tPATH\tCURRENT")
-
+	var sorted []config.JDK
 	for _, jdk := range jdks {
-		current := ""
-		if jdk.Name == currentName {
-			current = "*"
+		sorted = append(sorted, jdk)
+	}
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Name < sorted[j].Name
+	})
+
+	// Create and configure table
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Name", "Path", "Current"})
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetAutoWrapText(false)
+	table.SetAutoFormatHeaders(true)
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetTablePadding(" ")
+	table.SetNoWhiteSpace(true)
+
+	//var[]string data;
+	// Add data rows
+	for _, jdk := range sorted {
+		currentMark := "  "
+		name := style.Name.Render(jdk.Name)
+		path := style.Path.Render(jdk.Path)
+		if jdk.Name == currentJDK.Name {
+			currentMark = style.Current.Render("✓")
+			name = style.Current.Render(jdk.Name)
+			path = style.Current.Render(jdk.Path)
 		}
-		fmt.Fprintf(w, "%s\t%s\t%s\n", jdk.Name, jdk.Path, current)
+
+		table.Append([]string{
+			name,
+			path,
+			currentMark,
+		})
 	}
 
-	w.Flush()
+	// Render the table
+	table.Render()
 }
