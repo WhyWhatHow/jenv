@@ -31,6 +31,10 @@ func init() {
 }
 
 func runPath(cmd *cobra.Command, args []string) {
+	RunAddToPath()
+}
+
+func RunAddToPath() {
 	fmt.Println(style.Header.Render("Adding jenv to System PATH"))
 	if !sys.IsAdmin() {
 		fmt.Println(style.Error.Render("Error: You must run this command as administrator/root"))

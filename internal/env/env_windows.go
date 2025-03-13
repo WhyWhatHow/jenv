@@ -8,7 +8,6 @@ import (
 	"github.com/whywhathow/jenv/internal/sys"
 	"golang.org/x/sys/windows/registry"
 	"runtime"
-	"strings"
 )
 
 //const ENV_SYSTEM_PATH = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
@@ -128,28 +127,4 @@ func QuerySystemEnvironmentVariable(key string) (string, error) {
 		return "", fmt.Errorf("Setting current Registry key:  %v failed: %v.", key, err)
 	}
 	return value, nil
-}
-
-func AddToPath(binDir string) error {
-	oldPath, err := QuerySystemEnvironmentVariable("PATH")
-	if err != nil {
-		return err
-	}
-	return UpdateSystemEnvironmentVariable("PATH", binDir+";"+oldPath)
-}
-
-func IsInPath(dir string) bool {
-	path, err := QuerySystemEnvironmentVariable(`PATH`)
-	if err != nil {
-		return false
-	}
-	// 检查path 中是否有dir
-	// path 按照分号来分割
-	paths := strings.Split(path, ";")
-	for _, p := range paths {
-		if p == dir {
-			return true
-		}
-	}
-	return false
 }
