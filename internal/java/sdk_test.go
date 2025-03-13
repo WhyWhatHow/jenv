@@ -1,12 +1,58 @@
 package java
 
 import (
-	"jenv-go/internal/config"
+	"github.com/whywhathow/jenv/internal/config"
 
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
+
+func TestScanJDK(t *testing.T) {
+
+	// 测试用例
+	tests := []struct {
+		name     string
+		dir      string // 返回测试用的目录路径
+		expected int    // 预期找到的 JDK 数量
+	}{
+		{
+			name:     "C:\\",
+			dir:      "C:\\",
+			expected: 0,
+		},
+		{
+			name:     "空目录",
+			dir:      "E:\\test\\",
+			expected: 0,
+		},
+		{
+			name:     "C:\\JAVA\\",
+			dir:      "C:\\JAVA\\",
+			expected: 11,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testPath := tt.dir
+
+			// 添加计时开始点
+			start := time.Now()
+			defer func() {
+				// 输出执行耗时
+				t.Logf("ScanJDK 执行耗时: %v ", time.Since(start))
+			}()
+
+			result := ScanJDK(testPath)
+			t.Logf("找到 %d 个 JDK", len(result))
+			if len(result) != tt.expected {
+				t.Errorf("预期找到 %d 个 JDK，实际找到 %d 个", tt.expected, len(result))
+			}
+		})
+	}
+}
 
 func TestInit(t *testing.T) {
 	// 设置临时测试目录
