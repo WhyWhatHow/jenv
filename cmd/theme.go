@@ -9,8 +9,9 @@ import (
 )
 
 var themeCmd = &cobra.Command{
-	Use:   "theme [name]",
-	Short: "Manage color themes",
+	Aliases: []string{"t"},
+	Use:     "theme [name]",
+	Short:   "Manage color themes",
 	Long: `Manage color themes for the CLI interface.
 
 Without arguments, this command lists all available themes.
