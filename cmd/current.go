@@ -8,15 +8,17 @@ import (
 )
 
 var currentCmd = &cobra.Command{
-
-	Use:   "current",
-	Short: "Show the current JDK",
+	Aliases: []string{"cur", "now"},
+	Use:     "current",
+	Short:   "Show the current JDK",
 	Long: `Show the current JDK configuration.
 
 This command displays the name and path of the currently active JDK.
 If no JDK is currently set, it will prompt you to configure one first.`,
-	Example: "  jenv current",
-	Run:     runCurrent,
+	Example: `jenv current
+jenv cur
+jenv now`,
+	Run: runCurrent,
 }
 
 func init() {

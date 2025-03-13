@@ -12,14 +12,16 @@ import (
 )
 
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all Java JDKs",
+	Aliases: []string{"ls"},
+	Use:     "list",
+	Short:   "List all Java JDKs",
 	Long: `List all Java JDKs registered in the environment.
 
 This command displays all registered JDK installations,
 showing their names, paths, and which one is currently active.`,
-	Example: "  jenv list",
-	Run:     RunList,
+	Example: `  jenv list
+jenv ls`,
+	Run: RunList,
 }
 
 func init() {
