@@ -6,7 +6,6 @@ import (
 	"github.com/whywhathow/jenv/internal/config"
 	"github.com/whywhathow/jenv/internal/env"
 	"github.com/whywhathow/jenv/internal/sys"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -29,7 +28,7 @@ func init() {
 	//if err != nil {
 	//	return fmt.Errorf("加载配置失败: %v", err)
 	//}
-	Init()
+	//Init()
 }
 func Init() error {
 	//cfg, err := config.GetInstance()
@@ -128,7 +127,6 @@ func UseJDK(name string) error {
 	if err := sys.CreateSymlink(jdk.Path, cfg.SymlinkPath); err != nil {
 		return fmt.Errorf("创建符号链接失败: %v", err)
 	}
-
 	// 设置当前 JDK
 	if err := cfg.SetCurrentJDK(name); err != nil {
 		return err
@@ -208,7 +206,6 @@ func scanForJDKs(dir string) []JDK {
 
 			// 目录深度检查
 			if strings.Count(fullPath[len(dir):], string(os.PathSeparator)) > 3 {
-				log.Print("Skipping directory:", fullPath, "\n")
 				continue
 			}
 

@@ -11,6 +11,7 @@ var (
 	Error   = lipgloss.NewStyle()
 	Success = lipgloss.NewStyle()
 	Input   = lipgloss.NewStyle()
+	Info    = lipgloss.NewStyle()
 )
 
 func init() {
