@@ -33,14 +33,14 @@ func RequireAdmin() error {
 	return nil
 }
 
-// IsSymlink checks if the specified path is a symbolic link
-func IsSymlink(path string) bool {
-	info, err := os.Lstat(path)
-	if err != nil {
-		return false
-	}
-	return info.Mode()&os.ModeSymlink != 0
-}
+//// IsSymlink checks if the specified path is a symbolic link
+//func IsSymlink(path string) bool {
+//	info, err := os.Lstat(path)
+//	if err != nil {
+//		return false
+//	}
+//	return info.Mode()&os.ModeSymlink != 0
+//}
 
 // GetSymlinkTarget retrieves the target path of a symbolic link
 func GetSymlinkTarget(path string) (string, error) {
@@ -64,8 +64,8 @@ func CreateSymlink(oldPath string, newPath string) error {
 		return err
 	}
 
-	// If the target path exists and is a symbolic link, remove it first
-	if IsSymlink(newPath) {
+	// If the target path exists , remove it first
+	if _, err := os.Stat(newPath); err == nil {
 		if err := os.Remove(newPath); err != nil {
 			return fmt.Errorf("Failed to remove existing symbolic link: %v", err)
 		}
