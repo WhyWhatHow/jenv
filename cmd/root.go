@@ -10,6 +10,8 @@ import (
 	"os"
 )
 
+var Version = "dev"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "jenv",
@@ -23,6 +25,7 @@ First time setup:
 ➜ Run 'jenv add-to-path' to add jenv to your system PATH
 ➜ Run 'jenv scan <dir>' to find and add Java installations
 ➜ Run 'jenv use <name>' to select a Java version`,
+	Version: Version,
 }
 
 // Set author information and license
