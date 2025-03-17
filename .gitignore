@@ -5,3 +5,5 @@
 test_createSymLink.go
 guide.md
 /.idea/
+# Added by goreleaser init:
+dist/
