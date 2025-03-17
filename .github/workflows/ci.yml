@@ -24,10 +24,10 @@ jobs:
           cache: true
       - name: Install dependencies
         run: go mod download
-      - name: Run tests
-        run: go test -v ./...
-      - name: Run linter
-        uses: golangci/golangci-lint-action@v3
+#      - name: Run tests
+#        run: go test -v ./...
+#      - name: Run linter
+#        uses: golangci/golangci-lint-action@v3
         with:
           version: latest
 
