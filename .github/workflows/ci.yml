@@ -28,8 +28,8 @@ jobs:
 #        run: go test -v ./...
 #      - name: Run linter
 #        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
+#        with:
+#          version: latest
 
   release:
     name: Release
