@@ -110,15 +110,6 @@ func RestorePathFromBackup() error {
 	return nil
 }
 
-// userPath, or systemPath update
-//
-//	func UpdateBackUp(key string, value string) {
-//		backup, err := getBackupPath()
-//		if err == null {
-//			 if(key=="userpath")
-//		}
-//
-// }
 func GetDefaultBackupFilePath() string {
 	// Get user home directory
 	home, err := os.UserHomeDir()
