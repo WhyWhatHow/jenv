@@ -63,7 +63,7 @@ func BackupEnvPath() error {
 		return err
 	}
 
-	// Write to backup.json file
+	// Write  backup.json file
 	return os.WriteFile(backupPath, data, 0644)
 }
 
