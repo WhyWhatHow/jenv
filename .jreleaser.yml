@@ -1,0 +1,65 @@
+matrix:
+  rows:
+    # - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
+    # - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
+    # - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
+    # - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
+    # - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
+    - { goos: windows, goarch: amd64, platform: windows-x86_64 }
+environment:
+  properties:
+    VERSION: 0.3.4  # 直接在配置文件中定义 todo
+project:
+  name: jenv
+  version: 0.3.4  # 引用上面定义的属性 todo 
+  description: Java Environment Manager
+  authors:
+    - WhyWhatHow
+  license: Apache-2.0
+  links:
+    homepage: https://github.com/WhyWhatHow/jenv
+
+release:
+  github:
+    owner: WhyWhatHow
+    name: jenv
+    overwrite: true
+    draft: false
+    discussionCategoryName: Announcements
+    changelog:
+      formatted: ALWAYS
+      format: "- {{commitShortHash}} {{commitTitle}}"
+      contributors:
+        format: "- {{contributorName}}"
+
+hooks:
+  script:
+    before:
+      - run: |
+          echo "building ${GOOS}-${GOARCH}-${VERSION}"
+          go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o dist/${GOOS}-${GOARCH}/
+        applyDefaultMatrix: true
+        verbose: true
+        environment:
+          VERSION: "{{projectVersion}}"
+          GOOS: "{{ matrix.goos }}"
+          GOARCH: "{{ matrix.goarch }}"
+
+assemble:
+  archive:
+    jenv:
+      active: ALWAYS
+      formats: [ ZIP ]
+      applyDefaultMatrix: true
+      archiveName: "jenv-{{projectVersion}}-{{ matrix.platform }}"
+      fileSets:
+        - input: "dist/{{ matrix.goos }}-{{ matrix.goarch }}"
+          output: "bin"
+          includes: [ "jenv{.exe,}" ]
+        - input: "."
+          includes: [ "LICENSE" ]
+
+distributions:
+  jenv:
+    executable:
+      windowsExtension: exe
