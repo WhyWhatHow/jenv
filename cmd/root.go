@@ -28,38 +28,13 @@ First time setup:
 	Version: Version,
 }
 
-// Set author information and license
-//func init() {
-//	rootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "version %s" .Version}}
-//version: 0.1.0
-//Author: WhyWhatHow (https://github.com/WhyWhatHow)
-//Email: whywhathow.fun@gmail.com
-//License: Apache License 2.0
-//`)
-//
-//	//Initialize configuration system
-//	cfg, err := config.GetInstance()
-//	if err != nil {
-//		fmt.Printf("Error initializing configuration: %v\n", err)
-//		os.Exit(1)
-//	}
-//	if !cfg.Initialized {
-//		//1.  backup environment variables
-//		java.Init()
-//		err := config.BackupEnvPath()
-//
-//		if err != nil {
-//			fmt.Printf("Error backing up environment variables: %v\n", err)
-//			os.Exit(1)
-//		}
-//		//2. add JAVA_HOME,JAVA_HOME to PATH
-//		env.SetEnv("JAVA_HOME", cfg.SymlinkPath)
-//
-//		cfg.Initialized = true
-//		err = cfg.Save()
-//	}
-//	// Add global flags
-//}
+func init() {
+	rootCmd.SetVersionTemplate(`{{with .Name}}{{printf "%s " .}}{{end}}{{printf "version %s" .Version}}
+Author: WhyWhatHow (https://github.com/WhyWhatHow)
+Email: whywhathow.fun@gmail.com
+License: Apache License 2.0
+`)
+}
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.

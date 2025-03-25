@@ -8,8 +8,10 @@ var (
 	date    = "unknown"
 )
 
-func main() {
+func init() {
 	cmd.Version = version
+}
+func main() {
 	// 执行命令行工具的主入口点
 	cmd.Execute()
 }
