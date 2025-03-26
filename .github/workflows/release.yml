@@ -27,10 +27,6 @@ jobs:
           go-version: '1.21'
           cache: true
 
-      - name: Setup JReleaser
-        uses: jreleaser/release-action@v2
-        with:
-          setup-only: true
 
       - name: Extract version
         id: version
@@ -43,18 +39,29 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
 
-      - name: Run JReleaser
+
+      - name: Jreleaser Assemble
         uses: jreleaser/release-action@v2
+        with:
+          arguments: assemble
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: JReleaser release output
+      - name: JReleaser assemble output
         if: always()
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
-          name: jreleaser-release
+          name: jreleaser-assemble
           path: |
             out/jreleaser/trace.log
             out/jreleaser/output.properties
+
+      - name: Release
+        uses: jreleaser/release-action@v2
+        with:
+          arguments: release
+        env:
+          JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
