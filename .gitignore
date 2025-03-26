@@ -7,3 +7,5 @@ guide.md
 /.idea/
 # Added by goreleaser init:
 dist/
+todo.md
+out/
