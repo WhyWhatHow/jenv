@@ -6,9 +6,9 @@ matrix:
     # - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
     # - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
     - { goos: windows, goarch: amd64, platform: windows-x86_64 }
-environment:
-  properties:
-    VERSION: 0.3.4  # 直接在配置文件中定义 todo
+# environment:
+#   properties:
+#     VERSION: 0.3.4  # 直接在配置文件中定义 todo
 project:
   name: jenv
   version: 0.3.4  # 引用上面定义的属性 todo 
@@ -28,16 +28,38 @@ release:
     discussionCategoryName: Announcements
     changelog:
       formatted: ALWAYS
-      format: "- {{commitShortHash}} {{commitTitle}}"
+      format: '- {{commitShortHash}} {{commitTitle}}'
       contributors:
-        format: "- {{contributorName}}"
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+      labelers:
+        - label: 'feature'
+          title: 'feat:'
+        - label: 'issue'
+          title: 'fix:'
+        - label: 'task'
+          title: 'chore:'
+      categories:
+        - title: '⭐️ Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🛠 Tasks'
+          labels:
+            - 'task'
+      replacers:
+        - search: 'feat: '
+        - search: 'fix: '
+        - search: 'chore: '
 
 hooks:
   script:
     before:
       - run: |
+          cd src 
           echo "building ${GOOS}-${GOARCH}-${VERSION}"
-          go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o dist/${GOOS}-${GOARCH}/
+          go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/
         applyDefaultMatrix: true
         verbose: true
         environment:
