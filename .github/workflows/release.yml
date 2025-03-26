@@ -10,8 +10,8 @@ on:
 
 permissions:
   contents: write
-  discussions: write  # 添加 discussions 权限
-  issues: write      # 添加 issues 权限
+  discussions: write # 添加 discussions 权限
+  issues: write # 添加 issues 权限
 
 jobs:
   build:
@@ -27,13 +27,23 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
 
-
-
       - name: Extract version
         id: version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG_NAME#v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo $VERSION
+      #  echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+      - name: test Env setting work or not
+        env:
+          JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
+        run: |
+          echo "---whywhathow-test-----"
+          echo $VERSION
+          echo $JRELEASER_PROJECT_VERSION
 
       - name: Jreleaser Assemble
         uses: jreleaser/release-action@v2
@@ -59,7 +69,7 @@ jobs:
           arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 修改变量名
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 修改变量名
 
       - name: JReleaser release output
         if: always()
