@@ -8,8 +8,10 @@ on:
   pull_request:
     branches: [ main ]
 
-# permissions:
-#   contents: write
+permissions:
+  contents: write
+  discussions: write  # 添加 discussions 权限
+  issues: write      # 添加 issues 权限
 
 jobs:
   build:
@@ -57,7 +59,7 @@ jobs:
           arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 修改变量名
 
       - name: JReleaser release output
         if: always()
