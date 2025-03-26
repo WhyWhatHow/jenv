@@ -59,7 +59,7 @@ jobs:
           arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 修改变量名
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 修改变量名
 
       - name: JReleaser release output
         if: always()
