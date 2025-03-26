@@ -58,8 +58,9 @@ hooks:
   script:
     before:
       - run: |
-          cd src 
           echo "building ${GOOS}-${GOARCH}-${VERSION}"
+          cd src 
+          go mod download
           go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/
         applyDefaultMatrix: true
         verbose: true
