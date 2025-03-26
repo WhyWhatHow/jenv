@@ -1,6 +1,6 @@
-# Jenv-Go: Java Environment Manager
+# Jenv: Java Environment Manager
 
-[![CI/CD Pipeline](https://github.com/WhyWhatHow/jenv-go-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/WhyWhatHow/jenv-go-v2/actions/workflows/ci.yml)
+
 
 Jenv-Go is a command-line tool for managing multiple Java versions on your system. It allows you to easily switch between different Java versions, add new Java installations, and manage your Java environment.
 
@@ -10,97 +10,129 @@ Jenv-Go is a command-line tool for managing multiple Java versions on your syste
 - Switch between Java versions with a single command
 - Automatically update environment variables (JAVA_HOME, PATH)
 - Cross-platform support (Windows, Linux)
+  - [x] `Windows`
+  - [ ] `Linux`
+  - [ ] `MacOS`
+
+## Project Structure
+
+```
+.
+├── src/                # Source code directory
+│   ├── cmd/            # Command implementations
+│   │   ├── add.go      # Add JDK command
+│   │   ├── list.go     # List JDKs command
+│   │   ├── remove.go   # Remove JDK command
+│   │   ├── use.go      # Switch JDK command
+│   │   └── root.go     # Root command and flags
+│   ├── internal/       # Internal packages
+│   │   ├── config/     # Configuration management
+│   │   ├── constants/  # Constants definitions
+│   │   ├── env/        # Environment handling
+│   │   ├── java/       # Java SDK management
+│   │   ├── logging/    # Logging utilities
+│   │   ├── style/      # UI styling
+│   │   └── sys/        # System utilities
+│   └── jenv.go         # Main entry point
+├── doc/                # Documentation
+├── templates/          # Template files
+└── .github/            # GitHub configurations
+    └── workflows/      # CI/CD workflows
+```
 
 ## Installation
 
-Download the latest release from the [Releases page](https://github.com/WhyWhatHow/jenv-go-v2/releases).
+### From Release
+
+Download the latest release from the [Releases page](https://github.com/WhyWhatHow/jenv/releases).
+
+### Build from Source
+
+#### Prerequisites
+
+- Go 1.16 or higher
+- Git
+
+#### Build Steps
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/WhyWhatHow/jenv.git
+cd jenv
+```
+
+2. Build the project:
+
+```bash
+
+cd src 
+
+go mod download
+# For Windows (PowerShell)
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv.exe 
+
+# For Linux/macOS
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv 
+
+# For development build (with debug information)
+go build -o jenv.exe 
+```
 
 ## Usage
 
+### Basic Commands
+
 ```bash
-# Add a new JDK
+# Initialize or reinitialize jenv configuration
+jenv init
+
+# Add a new JDK with an alias name
+jenv add <alias> <jdk_path>
 jenv add jdk8 "C:\Program Files\Java\jdk1.8.0_291"
 
 # List all installed JDKs
 jenv list
 
-# Switch to a specific JDK
+# Switch to a specific JDK version
+jenv use <alias>
 jenv use jdk8
 
-# Remove a JDK
+# Remove a JDK from jenv
+jenv remove <alias>
 jenv remove jdk8
 
-# Update environment variables
+# Update environment variables (JAVA_HOME, PATH)
 jenv update
-
-# Initialize or reinitialize jenv
-jenv init
 ```
 
-## Development Guide
-
-### Project Structure
-
-```
-.
-├── cmd/            # Command implementations
-├── internal/       # Internal packages
-│   ├── config/     # Configuration management
-│   ├── constants/  # Constants definitions
-│   ├── env/        # Environment variable handling
-│   ├── java/       # Java SDK management
-│   └── sys/        # System utilities
-├── .github/        # GitHub configuration
-│   └── workflows/  # CI/CD workflows
-└── jenv.go         # Main entry point
-```
-
-### CI/CD Pipeline
-
-This project uses GitHub Actions for continuous integration and delivery. The workflow is defined in `.github/workflows/ci.yml`.
-
-#### Workflow Features
-
-- **Automated Testing**: All tests are run on every push and pull request
-- **Linting**: Code quality checks with golangci-lint
-- **Cross-platform Builds**: Builds for Windows and Linux
-- **Automated Releases**: Creates GitHub releases when tags are pushed
-
-### How to Use the CI/CD Pipeline
-
-#### For Development
-
-1. Fork and clone the repository
-2. Create a new branch for your feature or bugfix
-3. Make your changes and commit them
-4. Push your branch and create a pull request
-5. The CI pipeline will automatically run tests and linting
-
-#### For Releases
-
-1. Update the version in `cmd/root.go` (in the `Version` field)
-2. Commit your changes and push to the main branch
-3. Create and push a new tag with the version number:
+### Additional Features
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+# Scan system for installed JDKs
+jenv scan c:\
+
+# Show current JDK in use
+jenv current
+
+# Add jenv to system PATH
+jenv add-to-path
+
+# Change UI theme (light/dark)
+jenv theme <theme_name>
+jenv theme dark
 ```
 
-4. The CI/CD pipeline will automatically:
-   - Run tests and linting
-   - Build binaries for Windows and Linux
-   - Create a GitHub release with the binaries attached
-   - Generate release notes
+For detailed information about each command and its options, use:
+```bash
+jenv help [command]
+```
 
-### Contributing
+## Acknowledgments
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Special thanks to [Trae](https://trae.ai) for providing the fantastic agentic IDE and AI Flow paradigm that greatly
+enhanced our development experience.
 
 ## License
 
-Apache License 2.0
-
-## Author
-
-WhyWhatHow (https://github.com/WhyWhatHow)
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
