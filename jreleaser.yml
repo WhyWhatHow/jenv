@@ -13,6 +13,7 @@ project:
   name: jenv
   version: 0.3.4  # 引用上面定义的属性 todo 
   description: Java Environment Manager
+  copyright: Copyright (c) 2025 WhyWhatHow
   authors:
     - WhyWhatHow
   license: Apache-2.0

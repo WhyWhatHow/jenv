@@ -23,10 +23,8 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.23.4'
-          cache: true
+        uses: actions/setup-go@v5
+
 
 
       - name: Extract version
@@ -53,10 +51,20 @@ jobs:
             out/jreleaser/trace.log
             out/jreleaser/output.properties
 
-      - name: Release
+      - name: Jreleaser Release
         uses: jreleaser/release-action@v2
         with:
           arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: JReleaser release output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          name: jreleaser-release
+          path: |
+            out/jreleaser/trace.log
+            out/jreleaser/output.properties
