@@ -81,7 +81,7 @@ assemble:
           output: "bin"
           includes: [ "jenv{.exe,}" ]
         - input: "."
-          includes: [ "LICENSE" ]
+          includes: [ "LICENSE","README.md" ]
 
 distributions:
   jenv:
