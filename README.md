@@ -122,7 +122,6 @@ go build -o jenv
 ```bash
 # Verify jenv installation
 jenv --version
-
 ```
 
 ### Add and remove JDK
@@ -131,9 +130,9 @@ jenv --version
 
 ```bash
 # Add a new JDK with an alias name
-jenv add <alias> <jdk_path>
+#jenv add <alias> <jdk_path>
 jenv add jdk8 "C:\Program Files\Java\jdk1.8.0_291"
-jenv remove <alias>
+#jenv remove <alias>
 jenv remove jdk8
 ```
 
@@ -146,14 +145,14 @@ jenv list
 ### Switch to a specific JDK version
 
 ```bash
-jenv use <alias>
+#jenv use <alias>
 jenv use jdk8
 ```
 
 ### Remove a JDK from jenv
 
 ```bash
-jenv remove <alias>
+#jenv remove <alias>
 jenv remove jdk8
 ```
 
@@ -165,6 +164,7 @@ jenv current
 
 ### Scan system for installed JDKs
 ```bash
+#jenv scan <path>
 jenv scan c:\
 ```
 
@@ -177,13 +177,13 @@ jenv add-to-path
 ### Change UI theme (light/dark)
 
 ```bash
-jenv theme <theme_name>
+#jenv theme <theme_name>
 jenv theme dark
 ```
 
 ### help & version
 ```bash
-jenv help [command]
+#jenv help [command]
 jenv --version
 ```
 
