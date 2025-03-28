@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEnv - Java Environment Manager</title>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@preline/overlay@1.4.0/dist/overlay.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        body {
+            font-family: var(--font-sans);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-sans);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #3B82F6, #10B981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .command-box {
+            font-family: var(--font-mono);
+        }
+
+        :lang(zh) {
+            font-family: var(--font-sans), 'Source Han Sans SC', 'Noto Sans SC', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900" x-data="{ language: 'en', darkMode: false }" :class="{ 'dark': darkMode }">
+<!-- 导航栏 -->
+<nav class="fixed w-full z-50 bg-white dark:bg-gray-900 shadow-md">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://raw.githubusercontent.com/WhyWhatHow/jenv/main/assets/jenv-logo.png" alt="JEnv Logo"
+                     class="h-10 w-10">
+                <span class="text-xl font-bold gradient-text">JEnv</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button @click="language = language === 'en' ? 'zh' : 'en'"
+                        class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <i class="fas fa-language text-xl"></i>
+                </button>
+                <button @click="darkMode = !darkMode" class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                </button>
+                <a href="https://github.com/WhyWhatHow/jenv" target="_blank"
+                   class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero区域 -->
+<section class="pt-24 pb-16 bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center fade-in">
+            <img src="https://raw.githubusercontent.com/WhyWhatHow/jenv/main/assets/jenv-logo.png" alt="JEnv Logo"
+                 class="w-32 h-32 mx-auto mb-8">
+            <h1 class="text-5xl font-bold mb-6 gradient-text">
+                <span x-show="language === 'en'">Java Environment Manager</span>
+                <span x-show="language === 'zh'">Java 环境管理器</span>
+            </h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                    <span x-show="language === 'en'">
+                        A fast, efficient Java version manager optimized for Windows
+                    </span>
+                <span x-show="language === 'zh'">
+                        为 Windows 优化的快速、高效的 Java 版本管理器
+                    </span>
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="https://github.com/WhyWhatHow/jenv/releases" target="_blank"
+                   class="bg-primary hover:bg-blue-600 text-white px-8 py-3 rounded-lg transition duration-300">
+                    <i class="fas fa-download mr-2"></i>
+                    <span x-show="language === 'en'">Download</span>
+                    <span x-show="language === 'zh'">下载</span>
+                </a>
+                <a href="https://github.com/WhyWhatHow/jenv" target="_blank"
+                   class="bg-gray-700 hover:bg-gray-800 text-white px-8 py-3 rounded-lg transition duration-300">
+                    <i class="fab fa-github mr-2"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 特性展示 -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Key Features</span>
+            <span x-show="language === 'zh'">核心特性</span>
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- 特性卡片1 -->
+            <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg fade-in">
+                <div class="text-primary dark:text-blue-400 text-3xl mb-4">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Efficient Version Management</span>
+                    <span x-show="language === 'zh'">高效版本管理</span>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                        <span x-show="language === 'en'">
+                            Fast version switching through symbolic links with one-time system PATH configuration.
+                        </span>
+                    <span x-show="language === 'zh'">
+                            通过符号链接实现快速版本切换，仅需一次系统 PATH 配置。
+                        </span>
+                </p>
+            </div>
+            <!-- 特性卡片2 -->
+            <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg fade-in">
+                <div class="text-primary dark:text-blue-400 text-3xl mb-4">
+                    <i class="fab fa-windows"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Windows-First Design</span>
+                    <span x-show="language === 'zh'">Windows 优先设计</span>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                        <span x-show="language === 'en'">
+                            Optimized for Windows with automatic privilege handling and minimal UAC prompts.
+                        </span>
+                    <span x-show="language === 'zh'">
+                            为 Windows 优化，自动处理权限，最小化 UAC 提示。
+                        </span>
+                </p>
+            </div>
+            <!-- 特性卡片3 -->
+            <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg fade-in">
+                <div class="text-primary dark:text-blue-400 text-3xl mb-4">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Modern CLI Experience</span>
+                    <span x-show="language === 'zh'">现代命令行体验</span>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                        <span x-show="language === 'en'">
+                            Intuitive commands with light/dark theme support and colorful output.
+                        </span>
+                    <span x-show="language === 'zh'">
+                            直观的命令结构，支持明暗主题，彩色输出提升可读性。
+                        </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 演示部分 -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+                <span x-show="language === 'en'">See it in Action</span>
+                <span x-show="language === 'zh'">功能演示</span>
+            </h2>
+            <div class="bg-gray-900 p-4 rounded-lg shadow-lg overflow-hidden">
+                <img src="https://raw.githubusercontent.com/WhyWhatHow/jenv/main/assets/jenv.gif" alt="JEnv Demo"
+                     class="w-full rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 命令示例 -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Quick Start</span>
+            <span x-show="language === 'zh'">快速开始</span>
+        </h2>
+        <div class="max-w-3xl mx-auto space-y-6">
+            <!-- 命令示例卡片 -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 dark:text-gray-300">
+                            <span x-show="language === 'en'">Add a new JDK</span>
+                            <span x-show="language === 'zh'">添加新的 JDK</span>
+                        </span>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv add jdk8 "C:\Program Files\Java\jdk1.8.0_291"</pre>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 dark:text-gray-300">
+                            <span x-show="language === 'en'">Switch Java version</span>
+                            <span x-show="language === 'zh'">切换 Java 版本</span>
+                        </span>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv use jdk8</pre>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 dark:text-gray-300">
+                            <span x-show="language === 'en'">List installed JDKs</span>
+                            <span x-show="language === 'zh'">列出已安装的 JDK</span>
+                        </span>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv list</pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 性能对比 -->
+<!-- <section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Performance Comparison</span>
+            <span x-show="language === 'zh'">性能对比</span>
+        </h2>
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Version Switch Speed</span>
+                    <span x-show="language === 'zh'">版本切换速度</span>
+                </h3>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-600 dark:text-gray-300">JEnv</span>
+                    <span class="text-green-500">< 1s</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600 dark:text-gray-300">Traditional Method</span>
+                    <span class="text-red-500">~30s</span>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Resource Usage</span>
+                    <span x-show="language === 'zh'">资源占用</span>
+                </h3>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-600 dark:text-gray-300">Memory</span>
+                    <span class="text-green-500">< 10MB</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-600 dark:text-gray-300">CPU</span>
+                    <span class="text-green-500">< 1%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<!-- 工具对比 -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Why Choose JEnv?</span>
+            <span x-show="language === 'zh'">为什么选择 JEnv？</span>
+        </h2>
+        <div class="max-w-4xl mx-auto overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                <tr class="bg-gray-100 dark:bg-gray-700">
+                    <th class="p-4 text-left text-gray-900 dark:text-white">Features</th>
+                    <th class="p-4 text-center text-primary">JEnv</th>
+                    <th class="p-4 text-center text-gray-600 dark:text-gray-400">Others</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800">
+                <tr class="border-b dark:border-gray-700">
+                    <td class="p-4 text-gray-900 dark:text-white">Windows Optimization</td>
+                    <td class="p-4 text-center text-green-500"><i class="fas fa-check"></i></td>
+                    <td class="p-4 text-center text-red-500"><i class="fas fa-times"></i></td>
+                </tr>
+                <tr class="border-b dark:border-gray-700">
+                    <td class="p-4 text-gray-900 dark:text-white">Symlink Technology</td>
+                    <td class="p-4 text-center text-green-500"><i class="fas fa-check"></i></td>
+                    <td class="p-4 text-center text-red-500"><i class="fas fa-times"></i></td>
+                </tr>
+                <!-- <tr>
+                    <td class="p-4 text-gray-900 dark:text-white">Modern UI/UX</td>
+                    <td class="p-4 text-center text-green-500"><i class="fas fa-check"></i></td>
+                    <td class="p-4 text-center text-red-500"><i class="fas fa-times"></i></td>
+                </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- 安装指南 -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Installation Guide</span>
+            <span x-show="language === 'zh'">安装指南</span>
+        </h2>
+        <div class="max-w-3xl mx-auto space-y-8">
+            <!-- 系统要求 -->
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105">
+                <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">System Requirements</span>
+                    <span x-show="language === 'zh'">系统要求</span>
+                </h3>
+                <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Windows 10/11
+                    </li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Administrator
+                        privileges
+                    </li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>At least one
+                        JDK installed
+                    </li>
+                </ul>
+            </div>
+            <!-- 安装步骤 -->
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Installation Steps</span>
+                    <span x-show="language === 'zh'">安装步骤</span>
+                </h3>
+                <div class="space-y-4">
+                    <template x-for="(step, index) in [
+                            { en: 'Download the latest release from GitHub', zh: '从GitHub下载最新版本', cmd: '' },
+                            { en: 'Extract the ZIP file to your desired location', zh: '解压ZIP文件到指定位置', cmd: '' },
+                            { en: 'Run JEnv with administrator privileges', zh: '以管理员权限运行JEnv', cmd: '' },
+                            { en: 'Configure system PATH automatically', zh: '自动配置系统PATH', cmd: 'jenv path' },
+                            { en: 'Verify the installation', zh: '验证安装', cmd: 'jenv --version' }
+                        ]">
+                        <div class="relative">
+                            <div class="flex items-center mb-2">
+                                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+                                    <span x-text="index + 1"></span>
+                                </div>
+                                <div class="ml-4 flex-grow">
+                                    <p class="text-gray-900 dark:text-white font-medium"
+                                       x-text="language === 'en' ? step.en : step.zh"></p>
+                                    <template x-if="step.cmd">
+                                        <pre class="mt-2 bg-gray-900 text-green-400 p-3 rounded-md font-mono text-sm"
+                                             x-text="step.cmd"></pre>
+                                    </template>
+                                </div>
+                            </div>
+                            <div x-show="index < 4" class="w-0.5 h-6 bg-primary ml-4"></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">FAQ</span>
+            <span x-show="language === 'zh'">常见问题</span>
+        </h2>
+        <div class="max-w-3xl mx-auto space-y-6">
+            <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">How does JEnv work?</span>
+                    <span x-show="language === 'zh'">JEnv 是如何工作的？</span>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    <span x-show="language === 'en'">JEnv uses symbolic links to manage multiple Java versions efficiently. When you switch versions, JEnv updates the symlink to point to the desired JDK installation.</span>
+                    <span x-show="language === 'zh'">JEnv 使用符号链接高效管理多个 Java 版本。当切换版本时，JEnv 会更新符号链接指向所需的 JDK 安装目录。</span>
+                </p>
+            </div>
+            <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                    <span x-show="language === 'en'">Do I need to uninstall existing JDKs?</span>
+                    <span x-show="language === 'zh'">我需要卸载现有的 JDK 吗？</span>
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    <span x-show="language === 'en'">No, JEnv works with your existing JDK installations. You can keep all your JDK versions and switch between them seamlessly.</span>
+                    <span x-show="language === 'zh'">不需要，JEnv 可以与现有的 JDK 安装共存。您可以保留所有 JDK 版本并无缝切换。</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 社区贡献 -->
+<section class="py-16 bg-white dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
+            <span x-show="language === 'en'">Community & Contribution</span>
+            <span x-show="language === 'zh'">社区与贡献</span>
+        </h2>
+        <div class="max-w-3xl mx-auto text-center">
+            <p class="text-gray-600 dark:text-gray-300 mb-8">
+                <span x-show="language === 'en'">JEnv is an open-source project and welcomes contributions from the community. Whether it's bug reports, feature requests, or code contributions, every bit helps!</span>
+                <span x-show="language === 'zh'">JEnv 是一个开源项目，欢迎社区贡献。无论是报告错误、功能请求还是代码贡献，都能帮助项目变得更好！</span>
+            </p>
+            <div class="flex justify-center space-x-4">
+                <a href="https://github.com/WhyWhatHow/jenv/issues" target="_blank"
+                   class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300">
+                    <i class="fas fa-bug mr-2"></i>
+                    <span x-show="language === 'en'">Report Issues</span>
+                    <span x-show="language === 'zh'">报告问题</span>
+                </a>
+                <a href="https://github.com/WhyWhatHow/jenv/pulls" target="_blank"
+                   class="bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300">
+                    <i class="fas fa-code-branch mr-2"></i>
+                    <span x-show="language === 'en'">Pull Requests</span>
+                    <span x-show="language === 'zh'">提交代码</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="py-8 bg-gray-50 dark:bg-gray-800">
+    <div class="container mx-auto px-4 text-center">
+        <p class="text-gray-600 dark:text-gray-300">
+            <span x-show="language === 'en'">Made with ❤️ by WhyWhatHow</span>
+            <span x-show="language === 'zh'">由 WhyWhatHow 用 ❤️ 制作</span>
+        </p>
+        <div class="mt-4">
+            <a href="https://github.com/WhyWhatHow/jenv" target="_blank"
+               class="text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                <i class="fab fa-github text-2xl"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
