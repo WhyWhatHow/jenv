@@ -77,6 +77,25 @@
                      class="h-10 w-10">
                 <span class="text-xl font-bold gradient-text">JEnv</span>
             </div>
+            <!-- 添加导航链接 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#features" class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <span x-show="language === 'en'">Features</span>
+                    <span x-show="language === 'zh'">特性</span>
+                </a>
+                <a href="#quickstart" class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <span x-show="language === 'en'">Quick Start</span>
+                    <span x-show="language === 'zh'">快速开始</span>
+                </a>
+                <a href="#installation" class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <span x-show="language === 'en'">Installation</span>
+                    <span x-show="language === 'zh'">安装</span>
+                </a>
+                <a href="#faq" class="text-gray-600 dark:text-gray-300 hover:text-primary">
+                    <span x-show="language === 'en'">FAQ</span>
+                    <span x-show="language === 'zh'">常见问题</span>
+                </a>
+            </div>
             <div class="flex items-center space-x-4">
                 <button @click="language = language === 'en' ? 'zh' : 'en'"
                         class="text-gray-600 dark:text-gray-300 hover:text-primary">
@@ -130,7 +149,7 @@
 </section>
 
 <!-- 特性展示 -->
-<section class="py-16 bg-white dark:bg-gray-900">
+<section id="features" class="py-16 bg-white dark:bg-gray-900">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
             <span x-show="language === 'en'">Key Features</span>
@@ -212,51 +231,106 @@
 </section>
 
 <!-- 命令示例 -->
-<section class="py-16 bg-white dark:bg-gray-900">
+<section id="quickstart" class="py-16 bg-white dark:bg-gray-900">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
             <span x-show="language === 'en'">Quick Start</span>
             <span x-show="language === 'zh'">快速开始</span>
         </h2>
         <div class="max-w-3xl mx-auto space-y-6">
-            <!-- 命令示例卡片 -->
+            <!-- 基础命令 -->
             <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
                 <div class="flex justify-between items-center mb-4">
-                        <span class="text-gray-600 dark:text-gray-300">
-                            <span x-show="language === 'en'">Add a new JDK</span>
-                            <span x-show="language === 'zh'">添加新的 JDK</span>
-                        </span>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <span x-show="language === 'en'">Basic Commands</span>
+                            <span x-show="language === 'zh'">基础命令</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span x-show="language === 'en'">Check version and help information</span>
+                            <span x-show="language === 'zh'">查看版本和帮助信息</span>
+                        </p>
+                    </div>
                 </div>
-                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv add jdk8 "C:\Program Files\Java\jdk1.8.0_291"</pre>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
-                <div class="flex justify-between items-center mb-4">
-                        <span class="text-gray-600 dark:text-gray-300">
-                            <span x-show="language === 'en'">Switch Java version</span>
-                            <span x-show="language === 'zh'">切换 Java 版本</span>
-                        </span>
-                </div>
-                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv use jdk8</pre>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
-                <div class="flex justify-between items-center mb-4">
-                        <span class="text-gray-600 dark:text-gray-300">
-                            <span x-show="language === 'en'">List installed JDKs</span>
-                            <span x-show="language === 'zh'">列出已安装的 JDK</span>
-                        </span>
-                </div>
-                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv list</pre>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv --version
+jenv --help</pre>
             </div>
 
+            <!-- 环境配置 -->
             <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
                 <div class="flex justify-between items-center mb-4">
-                        <span class="text-gray-600 dark:text-gray-300">
-                            <span x-show="language === 'en'">Scan path for installed JDKs</span>
-                            <span x-show="language === 'zh'">扫描已安装的JDK</span>
-                        </span>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <span x-show="language === 'en'">Environment Setup</span>
+                            <span x-show="language === 'zh'">环境配置</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span x-show="language === 'en'">Configure system PATH and appearance</span>
+                            <span x-show="language === 'zh'">配置系统路径和外观</span>
+                        </p>
+                    </div>
                 </div>
-                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv scan c:\</pre>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv path
+jenv theme light
+jenv theme dark</pre>
             </div>
+
+            <!-- JDK 管理 -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <span x-show="language === 'en'">JDK Management</span>
+                            <span x-show="language === 'zh'">JDK 管理</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span x-show="language === 'en'">Add, remove and manage JDK versions</span>
+                            <span x-show="language === 'zh'">添加、删除和管理 JDK 版本</span>
+                        </p>
+                    </div>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv add jdk8 "C:\Program Files\Java\jdk1.8.0_291"
+jenv remove jdk8 
+jenv list   
+jenv scan c:\
+jenv current</pre>
+            </div>
+
+            <!-- 版本切换 -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <span x-show="language === 'en'">Version Switching</span>
+                            <span x-show="language === 'zh'">版本切换</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span x-show="language === 'en'">Switch between different JDK versions</span>
+                            <span x-show="language === 'zh'">在不同的 JDK 版本间切换</span>
+                        </p>
+                    </div>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv use jdk8
+jenv use jdk11</pre>
+            </div>
+
+            <!-- 高级功能 -->
+            <!-- <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 command-box">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <span x-show="language === 'en'">Advanced Features</span>
+                            <span x-show="language === 'zh'">高级功能</span>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span x-show="language === 'en'">Clean up and manage JEnv configuration</span>
+                            <span x-show="language === 'zh'">清理和管理 JEnv 配置</span>
+                        </p>
+                    </div>
+                </div>
+                <pre class="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto">jenv clean
+jenv refresh</pre>
+            </div> -->
         </div>
     </div>
 </section>
@@ -340,7 +414,7 @@
 </section>
 
 <!-- 安装指南 -->
-<section class="py-16 bg-white dark:bg-gray-900">
+<section id="installation" class="py-16 bg-white dark:bg-gray-900">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
             <span x-show="language === 'en'">Installation Guide</span>
@@ -403,7 +477,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="py-16 bg-gray-50 dark:bg-gray-800">
+<section id="faq" class="py-16 bg-gray-50 dark:bg-gray-800">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 gradient-text">
             <span x-show="language === 'en'">FAQ</span>
@@ -427,7 +501,7 @@
                 </h3>
                 <p class="text-gray-600 dark:text-gray-300">
                     <span x-show="language === 'en'">No, JEnv works with your existing JDK installations. You can keep all your JDK versions and switch between them seamlessly.</span>
-                    <span x-show="language === 'zh'">不需要，JEnv 可以与现有的 JDK 安装共存。您可以保留所有 JDK 版本并无缝切换。</span>
+                    <span x-show="language === 'zh'">不需要，JEnv 可以与现有的 JDK 安装共存。您可以保留所有 JDK 版本而无缝切换。</span>
                 </p>
             </div>
         </div>
@@ -481,3 +555,15 @@
 </footer>
 </body>
 </html>
+
+<style>
+    /* 在现有样式的末尾添加 */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* 由于固定导航栏的存在，需要调整滚动位置 */
+    section {
+        scroll-margin-top: 5rem;
+    }
+</style>
