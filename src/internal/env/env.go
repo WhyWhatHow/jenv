@@ -13,7 +13,7 @@ var oldPath string
 // SetEnv 临时设置环境变量
 func SetEnv(key string, value string) error {
 	if runtime.GOOS == "windows" {
-		return SetEnvInWin(key, value)
+		return doSetEnv(key, value)
 	} else {
 		return os.Setenv(key, value)
 	}

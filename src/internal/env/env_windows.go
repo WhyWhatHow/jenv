@@ -27,8 +27,8 @@ func getDefaultJAVAHOME() string {
 	return constants.ENV_LINUX_JAVA_HOME
 }
 
-// SetEnvInWin sets both system and user environment variables in Windows
-func SetEnvInWin(key, value string) error {
+// doSetEnv sets both system and user environment variables in Windows
+func doSetEnv(key, value string) error {
 	if err := UpdateSystemEnvironmentVariable(key, value); err != nil {
 		return err
 	}
