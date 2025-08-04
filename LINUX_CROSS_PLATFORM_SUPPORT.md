@@ -7,15 +7,14 @@
 ## 新增和修改的文件
 
 ### 新增文件
-- `src/internal/shell/shell.go` - 非Windows平台的Shell环境管理
-- `src/internal/shell/shell_windows.go` - Windows平台的Shell环境管理
+- `src/internal/shell/shell.go` - Unix-like系统的Shell环境管理
 - `src/internal/shell/shell_test.go` - Shell模块单元测试
-- `src/internal/env/env_linux_test.go` - Linux环境变量管理测试
+- `src/internal/env/env_unix_test.go` - Unix系统环境变量管理测试
 - `src/cmd/init.go` - 新的初始化命令
 - `LINUX_CROSS_PLATFORM_SUPPORT.md` - 本文档
 
 ### 修改文件
-- `src/internal/env/env_linux.go` - 完善Linux环境变量管理
+- `src/internal/env/env_unix.go` - 完善Unix系统环境变量管理（重命名自env_linux.go）
 - `src/internal/constants/constants.go` - 添加跨平台常量定义
 - `src/internal/config/config.go` - 优化跨平台配置管理
 - `src/internal/sys/system.go` - 增强系统工具类
@@ -23,6 +22,9 @@
 - `src/internal/style/theme.go` - 添加Warning颜色主题
 - `src/cmd/root.go` - 修改初始化逻辑，支持跨平台权限处理
 - `README.md` - 更新文档，添加Linux使用说明
+
+### 移除文件
+- `src/internal/shell/shell_windows.go` - 移除不必要的Windows shell支持
 
 ## 主要功能实现
 

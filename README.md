@@ -25,11 +25,13 @@ different Java versions, add new Java installations, and manage your Java enviro
 ### Cross-Platform Support
 
 - **Windows Support**
+    - Registry-based environment variable management (Windows standard)
     - Automatic administrator privilege handling
     - Minimized UAC prompts with least privilege principle
     - Superior performance on Windows 10/11 systems
 
-- **Linux Support**
+- **Linux/Unix Support**
+    - Shell configuration file-based environment management
     - User-level and system-level configuration options
     - Multi-shell environment support (bash, zsh, fish)
     - Intelligent permission handling
