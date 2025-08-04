@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+// This package provides shell environment management for Unix-like systems only.
+// Windows uses registry-based environment variable management and does not need
+// shell configuration file support.
+
 // ShellType represents different shell types
 type ShellType string
 
@@ -74,7 +78,7 @@ func DetectUserShells() ([]ShellType, error) {
 
 	for shellType, config := range configs {
 		configPath := filepath.Join(homeDir, config.ConfigFile)
-		
+
 		// For fish, check if the config directory exists
 		if shellType == Fish {
 			configDir := filepath.Dir(configPath)
