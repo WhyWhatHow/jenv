@@ -22,12 +22,17 @@ different Java versions, add new Java installations, and manage your Java enviro
     - Changes persist across system reboots
     - Instant effect in all console windows
 
-### Windows-First Design
+### Cross-Platform Support
 
-- **Optimized for Windows**
+- **Windows Support**
     - Automatic administrator privilege handling
     - Minimized UAC prompts with least privilege principle
     - Superior performance on Windows 10/11 systems
+
+- **Linux Support**
+    - User-level and system-level configuration options
+    - Multi-shell environment support (bash, zsh, fish)
+    - Intelligent permission handling
 
 ### Modern CLI Experience
 
@@ -47,10 +52,10 @@ different Java versions, add new Java installations, and manage your Java enviro
 
 ### Future-Ready
 
-- **Cross-Platform Support (Planned)**
-    - Windows support (Current)
-    - Linux support (Coming soon)
-    - macOS support (Coming soon)
+- **Cross-Platform Support**
+    - Windows support (✅ Complete)
+    - Linux support (✅ Complete)
+    - macOS support (🚧 In Progress)
 ## Project Structure
 
 ```
@@ -87,7 +92,8 @@ Download the latest release from the [Releases page](https://github.com/WhyWhatH
 
 - Go 1.21 or higher
 - Git
-- Windows systems require [Administrator privileges](#symbolic-link-permissions) (for creating system symbolic links)
+- **Windows**: Administrator privileges required for system symbolic links
+- **Linux**: Root privileges recommended for system-wide installation (optional)
 
 #### Build Steps
 
@@ -100,17 +106,16 @@ cd jenv
 2. Build the project:
 
 ```bash
-
-cd src 
+cd src
 
 # For Windows (PowerShell)
-go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv.exe
 
 # For Linux/macOS
-go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv 
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv
 
 # For development build (with debug information)
-go build -o jenv 
+go build -o jenv
 ```
 
 ## Usage
@@ -122,6 +127,28 @@ go build -o jenv
 ```bash
 # Verify jenv installation
 jenv --version
+```
+
+### First-time Setup
+
+```bash
+# Initialize jenv (required for first-time use)
+jenv init
+
+# Add jenv to your system PATH
+jenv add-to-path
+```
+
+**Note for Linux users**: After initialization, you may need to restart your shell or run:
+```bash
+# For bash users
+source ~/.bashrc
+
+# For zsh users
+source ~/.zshrc
+
+# For fish users
+source ~/.config/fish/config.fish
 ```
 
 ### Add and remove JDK
@@ -164,8 +191,15 @@ jenv current
 
 ### Scan system for installed JDKs
 ```bash
-#jenv scan <path>
+# Windows
 jenv scan c:\
+
+# Linux
+jenv scan /usr/lib/jvm
+jenv scan /opt
+
+# macOS
+jenv scan /Library/Java/JavaVirtualMachines
 ```
 
 ### Add jenv to system PATH
@@ -191,8 +225,13 @@ jenv --version
 
 ### Why are administrator privileges needed?
 
-Due to Windows system restrictions, creating system-level symbolic links requires:
-`Running PowerShell as Administrator`
+**Windows**: Due to Windows system restrictions, creating system-level symbolic links requires running PowerShell as Administrator.
+
+**Linux**: Administrator privileges (sudo/root) are only required for:
+- System-wide installation (symlinks in `/opt/jenv/`)
+- Modifying system-level environment files (`/etc/environment`)
+
+Without root privileges, jenv will automatically use user-level configuration in your home directory.
 
 ### Why was this project created?
 
@@ -210,29 +249,37 @@ similar to what Linux and macOS users already enjoy.
 
 ### How it works?
 
-Inspired by nvm-windows, JEnv uses symlinks for Java version management, which offers several advantages:
+Inspired by nvm-windows, JEnv uses symlinks for Java version management across all platforms, which offers several advantages:
 
 1. **Symlink-Based Architecture**
-    - Creates a single symlink at `C:\java\JAVA_HOME` during installation
+    - **Windows**: Creates a single symlink at `C:\java\JAVA_HOME` during installation
+    - **Linux**: Creates symlink at `/opt/jenv/java_home` (system) or `~/.jenv/java_home` (user)
     - Switching Java versions only requires updating the symlink target
     - No need to modify system PATH repeatedly
-    - Changes persist across system reboots and apply to all console windows
+    - Changes persist across system reboots and apply to all console windows/shells
 
 2. **Implementation Details**
     - During initialization:
-        - Creates `JAVA_HOME` directory at `C:\java\JAVA_HOME`
-        - Adds `JAVA_HOME\bin` to system PATH (one-time setup)
+        - **Windows**: Creates `JAVA_HOME` directory at `C:\java\JAVA_HOME`
+        - **Linux**: Creates symlink directory based on privileges (system or user level)
+        - Adds `JAVA_HOME/bin` to system PATH (one-time setup)
         - Creates initial symlink to default JDK
     - When switching versions:
         - Simply updates symlink target to desired JDK
         - No PATH modifications needed
-        - Changes take effect immediately in all console windows
+        - Changes take effect immediately in all console windows/shells
 
-3. **Administrative Privileges**
-    - Administrator privileges are only required when creating/modifying symbolic links
-    - UAC prompts are handled automatically with minimal privilege scope
-    - Follows the principle of least privilege, requesting only necessary permissions
-    - Permission requests only occur during initialization (jenv init) and version switching (jenv use)
+3. **Permission Handling**
+    - **Windows**: Administrator privileges required for system symbolic links
+    - **Linux**: Root privileges optional - falls back to user-level configuration
+    - UAC/sudo prompts handled automatically with minimal privilege scope
+    - Follows the principle of least privilege
+    - Permission requests only occur during initialization and version switching
+
+4. **Multi-Shell Support (Linux)**
+    - Automatically detects and configures bash, zsh, fish shells
+    - Updates appropriate configuration files (.bashrc, .zshrc, config.fish)
+    - Ensures environment variables persist across shell sessions
 
 This approach is more efficient than constantly modifying system PATH variables, providing a cleaner and more reliable
 solution for Java version management on Windows.
