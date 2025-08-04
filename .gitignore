@@ -9,3 +9,9 @@ guide.md
 dist/
 todo.md
 out/
+src/jenv.exe
+trace.log
+*.txt
+v2.html
+c7.html
+src/jenv-linux
