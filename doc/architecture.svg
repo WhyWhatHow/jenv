@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+    <!-- 标题 -->
+    <text x="400" y="40" text-anchor="middle" font-size="24" font-weight="bold">JEnv 技术架构图</text>
+    
+    <!-- 主程序入口 -->
+    <rect x="350" y="60" width="100" height="40" rx="5" fill="#4CAF50" opacity="0.8"/>
+    <text x="400" y="85" text-anchor="middle" fill="white">Main (jenv.go)</text>
+    
+    <!-- CMD 模块 -->
+    <rect x="200" y="140" width="400" height="100" rx="5" fill="#2196F3" opacity="0.8"/>
+    <text x="400" y="165" text-anchor="middle" fill="white" font-weight="bold">命令行模块 (cmd)</text>
+    <text x="220" y="190" fill="white" font-size="12">- add: 添加Java SDK</text>
+    <text x="220" y="210" fill="white" font-size="12">- use: 切换Java版本</text>
+    <text x="220" y="230" fill="white" font-size="12">- list/current/remove/scan/theme: 其他命令</text>
+    
+    <!-- Internal 模块 -->
+    <g transform="translate(0,280)">
+        <!-- Config 模块 -->
+        <rect x="50" y="0" width="150" height="80" rx="5" fill="#FF9800" opacity="0.8"/>
+        <text x="125" y="25" text-anchor="middle" fill="white" font-weight="bold">配置模块</text>
+        <text x="60" y="45" fill="white" font-size="12">- 配置文件管理</text>
+        <text x="60" y="65" fill="white" font-size="12">- 备份恢复</text>
+        
+        <!-- Java 模块 -->
+        <rect x="250" y="0" width="150" height="80" rx="5" fill="#FF9800" opacity="0.8"/>
+        <text x="325" y="25" text-anchor="middle" fill="white" font-weight="bold">Java模块</text>
+        <text x="260" y="45" fill="white" font-size="12">- SDK管理</text>
+        <text x="260" y="65" fill="white" font-size="12">- 版本检测</text>
+        
+        <!-- Env 模块 -->
+        <rect x="450" y="0" width="150" height="80" rx="5" fill="#FF9800" opacity="0.8"/>
+        <text x="525" y="25" text-anchor="middle" fill="white" font-weight="bold">环境模块</text>
+        <text x="460" y="45" fill="white" font-size="12">- 环境变量管理</text>
+        <text x="460" y="65" fill="white" font-size="12">- 跨平台支持</text>
+        
+        <!-- Style 模块 -->
+        <rect x="650" y="0" width="150" height="80" rx="5" fill="#FF9800" opacity="0.8"/>
+        <text x="725" y="25" text-anchor="middle" fill="white" font-weight="bold">样式模块</text>
+        <text x="660" y="45" fill="white" font-size="12">- UI主题</text>
+        <text x="660" y="65" fill="white" font-size="12">- 终端美化</text>
+    </g>
+    
+    <!-- 依赖框架 -->
+    <rect x="200" y="400" width="400" height="80" rx="5" fill="#9C27B0" opacity="0.8"/>
+    <text x="400" y="425" text-anchor="middle" fill="white" font-weight="bold">核心依赖</text>
+    <text x="220" y="450" fill="white" font-size="12">- Cobra: 命令行框架</text>
+    <text x="220" y="470" fill="white" font-size="12">- Lipgloss: 终端UI美化</text>
+    
+    <!-- 连接线 -->
+    <line x1="400" y1="100" x2="400" y2="140" stroke="#333" stroke-width="2"/>
+    <line x1="400" y1="240" x2="400" y2="280" stroke="#333" stroke-width="2"/>
+    <line x1="400" y1="360" x2="400" y2="400" stroke="#333" stroke-width="2"/>
+</svg>
