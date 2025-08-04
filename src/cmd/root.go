@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+
 	"github.com/spf13/cobra"
 	"github.com/whywhathow/jenv/internal/config"
-	"github.com/whywhathow/jenv/internal/java"
 	"github.com/whywhathow/jenv/internal/style"
 	"github.com/whywhathow/jenv/internal/sys"
-	"os"
 )
 
 var Version = "dev"
@@ -34,31 +35,26 @@ Author: WhyWhatHow (https://github.com/WhyWhatHow)
 Email: whywhathow.fun@gmail.com
 License: Apache License 2.0
 `)
-}
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-}
-
-/*
-*
-1. Initialize configuration
-2. Backup environment variables if not already done
-3. Add global flags
-4.
-*/
-func init() {
-	// Check admin privileges
-	if !sys.IsAdmin() {
-		fmt.Printf("%s: %s\n",
-			style.Error.Render("Error"),
-			style.Error.Render("Administrator/root privileges required"))
-		os.Exit(1)
+	// Check admin privileges - different logic for different platforms
+	if runtime.GOOS == "windows" {
+		// Windows always requires administrator privileges
+		if !sys.IsAdmin() {
+			fmt.Printf("%s: %s\n",
+				style.Error.Render("Error"),
+				style.Error.Render("Administrator privileges required"))
+			os.Exit(1)
+		}
+	} else {
+		// Linux/Unix: Only warn if not root, don't exit
+		if !sys.IsAdmin() {
+			fmt.Printf("%s: %s\n",
+				style.Warning.Render("Warning"),
+				style.Warning.Render("Running without root privileges. Some features may be limited."))
+			fmt.Printf("%s: %s\n",
+				style.Info.Render("Info"),
+				style.Info.Render("jenv will use user-level configuration and symlinks."))
+		}
 	}
 
 	// Initialize configuration system
@@ -78,43 +74,23 @@ func init() {
 		}
 	}
 
-	// First-time initialization
+	// Check if jenv has been initialized
 	if !cfg.Initialized {
-		fmt.Println(style.Info.Render("➜ Performing first-time setup..."))
+		fmt.Printf("%s: %s\n",
+			style.Warning.Render("Warning"),
+			style.Warning.Render("jenv has not been initialized yet"))
+		fmt.Printf("%s: %s\n",
+			style.Info.Render("Info"),
+			style.Info.Render("Run 'jenv init' to set up jenv for first-time use"))
+		fmt.Println()
+	}
+}
 
-		// Backup environment variables
-		fmt.Print(style.Info.Render("➜ Backing up environment variables... "))
-		if err := config.BackupEnvPath(); err != nil {
-			fmt.Printf("\n%s: %s\n%s\n",
-				style.Error.Render("Error"),
-				style.Error.Render("Failed to backup environment variables"),
-				style.Error.Render(err.Error()))
-			os.Exit(1)
-		}
-		fmt.Println(style.Success.Render("✓"))
-
-		// Initialize Java environment  && add JAVA_HOME to PATH
-		fmt.Print(style.Info.Render("➜ Initializing Java environment... "))
-		if err := java.Init(); err != nil {
-			fmt.Printf("\n%s: %s\n%s\n",
-				style.Error.Render("Error"),
-				style.Error.Render("Failed to initialize Java environment"),
-				style.Error.Render(err.Error()))
-			os.Exit(1)
-		}
-		fmt.Println(style.Success.Render("✓"))
-
-		// Save configuration
-		cfg.Initialized = true
-		if err := cfg.Save(); err != nil {
-			fmt.Printf("%s: %s\n%s\n",
-				style.Error.Render("Error"),
-				style.Error.Render("Failed to save configuration"),
-				style.Error.Render(err.Error()))
-			os.Exit(1)
-		}
-
-		fmt.Printf("\n%s\n", style.Success.Render("✓ Initialization complete!"))
-		fmt.Printf("%s\n", style.Info.Render("➜ Run 'jenv add-to-path' to complete the setup"))
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }

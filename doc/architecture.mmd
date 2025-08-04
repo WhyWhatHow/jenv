@@ -1,0 +1,24 @@
+graph TD
+    A[jenv CLI] --> B[cmd模块]
+    A --> C[internal模块]
+
+    %% cmd模块的主要命令
+    B --> D[add]
+    B --> E[use]
+    B --> F[list]
+    B --> G[remove]
+    B --> H[scan]
+    B --> I[theme]
+    B --> J[current]
+
+    %% internal模块的主要组件
+    C --> K[config]
+    C --> L[constants]
+    C --> M[java]
+    C --> N[style]
+    C --> O[sys]
+
+    %% 组件说明
+    classDef default fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef module fill:#bbf,stroke:#333,stroke-width:2px;
+    class A,B,C module;

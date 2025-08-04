@@ -7,7 +7,6 @@ import (
 	"github.com/whywhathow/jenv/internal/constants"
 	"github.com/whywhathow/jenv/internal/sys"
 	"golang.org/x/sys/windows/registry"
-	"runtime"
 	"strings"
 	"syscall"
 	"unsafe"
@@ -20,15 +19,8 @@ const (
 
 //const ENV_SYSTEM_PATH = `SYSTEM\CurrentControlSet\Control\Session Manager\Environment`
 
-func getDefaultJAVAHOME() string {
-	if runtime.GOOS == "windows" {
-		return constants.ENV_WIN_JAVA_HOME
-	}
-	return constants.ENV_LINUX_JAVA_HOME
-}
-
-// SetEnvInWin sets both system and user environment variables in Windows
-func SetEnvInWin(key, value string) error {
+// doSetEnv sets both system and user environment variables in Windows
+func doSetEnv(key, value string) error {
 	if err := UpdateSystemEnvironmentVariable(key, value); err != nil {
 		return err
 	}
@@ -44,8 +36,8 @@ func SetSystemEnvPath() error {
 	}
 
 	// 1. checking JAVA_HOME exist in Path or not
-	currentPath = cleanPath(currentPath, getDefaultJAVAHOME())
-	newPath := getDefaultJAVAHOME() + ";" + currentPath
+	currentPath = cleanPath(currentPath, getDefaultJavaHome())
+	newPath := getDefaultJavaHome() + ";" + currentPath
 	return UpdateSystemEnvironmentVariable("PATH", newPath)
 }
 

@@ -1,6 +1,7 @@
 package env
 
 import (
+	"github.com/whywhathow/jenv/internal/constants"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -13,10 +14,18 @@ var oldPath string
 // SetEnv 临时设置环境变量
 func SetEnv(key string, value string) error {
 	if runtime.GOOS == "windows" {
-		return SetEnvInWin(key, value)
+		return doSetEnv(key, value)
 	} else {
-		return os.Setenv(key, value)
+		return doSetEnv(key, value)
+		//return os.Setenv(key, value)
 	}
+}
+
+func getDefaultJavaHome() string {
+	if runtime.GOOS == "windows" {
+		return constants.ENV_WIN_JAVA_HOME
+	}
+	return constants.ENV_LINUX_JAVA_HOME
 }
 
 // CleanJDKPath 清理 PATH 中的 JDK 相关设置

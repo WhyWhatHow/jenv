@@ -1,16 +1,16 @@
 matrix:
   rows:
-    # - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
-    # - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
-    # - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
-    # - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
-    # - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
-    - { goos: windows, goarch: amd64, platform: windows-x86_64 }
+     - { goos: darwin,  goarch: arm64, platform: osx-aarch_64     }
+     - { goos: darwin,  goarch: amd64, platform: osx-x86_64       }
+     - { goos: linux,   goarch: arm64, platform: linux-aarch_64   }
+     - { goos: linux,   goarch: amd64, platform: linux-x86_64     }
+     - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
+     - { goos: windows, goarch: amd64, platform: windows-x86_64 }
 
 project:
   name: jenv
-  #  version: 1.0.0  #local running
-  #  version: "{{ env.JRELEASER_PROJECT_VERSION | default('1.2.1') }}"  # 默认值语法
+  version: 1.0.0  #local running
+#  version: "{{ env.JRELEASER_PROJECT_VERSION | default('1.2.1') }}"  # 默认值语法
   description: Java Environment Manager
   copyright: Copyright (c) 2025 WhyWhatHow
   authors:
@@ -86,3 +86,4 @@ distributions:
   jenv:
     executable:
       windowsExtension: exe
+w

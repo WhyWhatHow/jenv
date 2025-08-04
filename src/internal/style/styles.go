@@ -9,6 +9,7 @@ var (
 	Path    = lipgloss.NewStyle()
 	Current = lipgloss.NewStyle()
 	Error   = lipgloss.NewStyle()
+	Warning = lipgloss.NewStyle()
 	Success = lipgloss.NewStyle()
 	Input   = lipgloss.NewStyle()
 	Info    = lipgloss.NewStyle()

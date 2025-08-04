@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/whywhathow/jenv/internal/constants"
-	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"sync"
+
+	"github.com/whywhathow/jenv/internal/constants"
 )
 
 var (
@@ -220,15 +220,36 @@ func ValidateJavaPath(path string) bool {
 }
 
 func GetDefaultSymlinkPath() string {
-	if runtime.GOOS == "windows" {
-		return constants.DEFAULT_SYMLINK_PATH
+	switch runtime.GOOS {
+	case "windows":
+		return constants.DEFAULT_SYMLINK_PATH_WINDOWS
+	case "linux":
+		// 尝试使用系统级路径，如果没有权限则使用用户级路径
+		if os.Geteuid() == 0 {
+			return constants.DEFAULT_SYMLINK_PATH_LINUX
+		}
+		// 非root用户使用用户目录
+		if dir, err := os.UserHomeDir(); err == nil {
+			return filepath.Join(dir, constants.USER_SYMLINK_PATH_LINUX)
+		}
+		return constants.DEFAULT_SYMLINK_PATH_LINUX
+	case "darwin":
+		// 尝试使用系统级路径，如果没有权限则使用用户级路径
+		if os.Geteuid() == 0 {
+			return constants.DEFAULT_SYMLINK_PATH_DARWIN
+		}
+		// 非root用户使用用户目录
+		if dir, err := os.UserHomeDir(); err == nil {
+			return filepath.Join(dir, constants.USER_SYMLINK_PATH_DARWIN)
+		}
+		return constants.DEFAULT_SYMLINK_PATH_DARWIN
+	default:
+		// 默认情况下使用用户目录
+		if dir, err := os.UserHomeDir(); err == nil {
+			return filepath.Join(dir, constants.DEFAULT_SYMLINK_NAME)
+		}
+		return "/tmp/jenv_java_home"
 	}
-	dir, err := os.UserHomeDir()
-	if err != nil {
-		log.Printf("Failed to get user home directory: %v", err)
-		return ""
-	}
-	return filepath.Join(dir, constants.DEFAULT_SYMLINK_NAME)
 }
 
 // CreateSymlink creates a symbolic link from source to target
@@ -286,7 +307,7 @@ func InitializeConfig(configFilePath string) error {
 		cfg := &Config{
 			Jdks:          make(map[string]JDK),
 			Current:       "",
-			SymlinkPath:   constants.DEFAULT_SYMLINK_PATH,
+			SymlinkPath:   GetDefaultSymlinkPath(), // 使用跨平台的默认路径
 			Initialized:   false,
 			EnvBackUpPath: "",
 		}

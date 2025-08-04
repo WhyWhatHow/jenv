@@ -10,6 +10,7 @@ type Theme struct {
 	PathColor    string
 	CurrentColor string
 	ErrorColor   string
+	WarningColor string
 	SuccessColor string
 	InputColor   string
 }
@@ -23,6 +24,7 @@ var (
 		PathColor:    "246", // Light gray for paths
 		CurrentColor: "159", // Soft cyan for current items
 		ErrorColor:   "203", // Soft red for errors
+		WarningColor: "214", // Orange for warnings
 		SuccessColor: "150", // Soft green for success
 		InputColor:   "153", // Soft blue for input
 	}
@@ -34,6 +36,7 @@ var (
 		PathColor:    "244", // Darker gray for paths
 		CurrentColor: "123", // Deep cyan for current items
 		ErrorColor:   "196", // Deep red for errors
+		WarningColor: "208", // Dark orange for warnings
 		SuccessColor: "114", // Deep green for success
 		InputColor:   "147", // Deep blue for input
 	}
@@ -45,6 +48,7 @@ var (
 		PathColor:    "242", // Medium gray for paths
 		CurrentColor: "37",  // Bright cyan for current items
 		ErrorColor:   "167", // Muted red for errors
+		WarningColor: "172", // Light orange for warnings
 		SuccessColor: "71",  // Muted green for success
 		InputColor:   "67",  // Muted blue for input
 	}
@@ -71,6 +75,10 @@ func ApplyTheme(theme Theme) {
 
 	Error = lipgloss.NewStyle().
 		Foreground(lipgloss.Color(theme.ErrorColor)).
+		Bold(true)
+
+	Warning = lipgloss.NewStyle().
+		Foreground(lipgloss.Color(theme.WarningColor)).
 		Bold(true)
 
 	Success = lipgloss.NewStyle().
