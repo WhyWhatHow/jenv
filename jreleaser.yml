@@ -1,7 +1,7 @@
 matrix:
   rows:
-    - { goos: darwin,  goarch: arm64, platform: osx-aarch_64 }
-    - { goos: darwin,  goarch: amd64, platform: osx-x86_64 }
+    #    - { goos: darwin,  goarch: arm64, platform: osx-aarch_64 }
+    #    - { goos: darwin,  goarch: amd64, platform: osx-x86_64 }
     - { goos: linux,   goarch: arm64, platform: linux-aarch_64 }
     - { goos: linux,   goarch: amd64, platform: linux-x86_64 }
     - { goos: windows, goarch: arm64, platform: windows-aarch_64 }
