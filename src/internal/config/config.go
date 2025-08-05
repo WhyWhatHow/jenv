@@ -208,12 +208,12 @@ func (c *Config) RemoveJDK(name string) error {
 func ValidateJavaPath(path string) bool {
 	// 是否需要根据runtime不同进行不同的判断呢
 	if runtime.GOOS == "windows" {
-		javaExe := filepath.Join(path, "bin", "java.exe")
+		javaExe := filepath.Join(path, "bin", "javac.exe")
 		_, err := os.Stat(javaExe)
 		return err == nil
 	} else {
 		// 其他os判断
-		java := filepath.Join(path, "bin", "java")
+		java := filepath.Join(path, "bin", "javac")
 		_, err := os.Stat(java)
 		return err == nil
 	}
