@@ -9,7 +9,7 @@ matrix:
 
 project:
   name: jenv
-  version: 1.0.0  #local running
+  #  version: 1.0.0  #local running
 #  version: "{{ env.JRELEASER_PROJECT_VERSION | default('1.2.1') }}"  # 默认值语法
   description: Java Environment Manager
   copyright: Copyright (c) 2025 WhyWhatHow
