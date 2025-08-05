@@ -2,17 +2,18 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/spf13/cobra"
 	"github.com/whywhathow/jenv/internal/java"
 	"github.com/whywhathow/jenv/internal/style"
-	"strings"
 )
 
 var (
 	scanCmd = &cobra.Command{
 		Aliases: []string{"sc"},
 		Use:     "scan <dir>",
-		Short:   "Scan a directory for JDKs (max depth: 3 subdirectories)",
+		Short:   "Scan a directory for JDKs (max depth: 5 subdirectories)",
 		Long: `Scan a specified directory for JDK installations and add them to jenv's config.
 
 Directory Depth Limit:
@@ -31,7 +32,6 @@ This command will:
 2. Skip system directories (Windows, $Recycle.Bin, System Volume Information)
 3. Add the JDKs to jenv's configuration`,
 
-		//TODO [whywhathow] [2025/3/13] [opt]  如果以后支持多平台,example 是不是需要根据os不同进行适配呢?
 		Example: `  jenv scan C:\\
   jenv scan "C:\\Program Files\\Java"
   jenv scan C:\\Users\\Username\\.jdks
@@ -52,11 +52,36 @@ func runScan(cmd *cobra.Command, args []string) {
 	header := style.Header.Render("🔍 Scanning directory: ") + style.Path.Render(dir)
 	fmt.Println(header + "\n" + strings.Repeat("─", 50))
 
-	jdks := java.ScanJDK(dir)
+	// Show scanning progress message
+	fmt.Println(style.Input.Render("⏳ Scanning for JDK installations..."))
+	fmt.Println(style.Input.Render("   • Excluding already registered JDKs"))
+	fmt.Println(style.Input.Render("   • Skipping system directories"))
+	fmt.Println()
+
+	// Use the new optimized scan with statistics
+	result := java.ScanJDKWithStats(dir)
+
+	// Display scan statistics
+	fmt.Printf("%s\n", style.Header.Render("📊 Scan Results"))
+	fmt.Printf("%s: %s\n", style.Name.Render("⏱️  Scan Duration"), style.Success.Render(result.Duration.String()))
+	fmt.Printf("%s: %d\n", style.Name.Render("📁 Directories Scanned"), result.Scanned)
+	fmt.Printf("%s: %d\n", style.Name.Render("⚠️  Directories Skipped"), result.Skipped)
+	fmt.Printf("%s: %d\n", style.Name.Render("🚫 Paths Excluded (duplicates)"), result.Excluded)
+	fmt.Printf("%s: %d\n", style.Name.Render("🎯 New JDKs Found"), len(result.JDKs))
+	fmt.Println(strings.Repeat("─", 50))
+
+	if len(result.JDKs) == 0 {
+		fmt.Println(style.Input.Render("✨ No new JDK installations found."))
+		if result.Excluded > 0 {
+			fmt.Println(style.Input.Render("   All discovered JDKs are already registered."))
+		}
+		return
+	}
+
 	successCount := 0
 	skipCount := 0
 
-	for i, jdk := range jdks {
+	for i, jdk := range result.JDKs {
 		// 显示带编号的JDK发现信息
 		fmt.Printf("\n%s %s\n",
 			style.Name.Render(fmt.Sprintf("#%02d", i+1)),
@@ -88,12 +113,13 @@ func runScan(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// 显示统计信息
-	summary := fmt.Sprintf("\n%s\n%s: %d\n%s: %d\n%s: %d",
-		style.Header.Render("Scan Complete!"),
-		style.Name.Render("Total Found"), len(jdks),
+	// 显示最终统计信息
+	summary := fmt.Sprintf("\n%s\n%s: %d\n%s: %d\n%s: %d\n%s: %s",
+		style.Header.Render("✅ Scan Complete!"),
+		style.Name.Render("New JDKs Found"), len(result.JDKs),
 		style.Success.Render("Successfully Added"), successCount,
-		style.Error.Render("Skipped"), skipCount)
+		style.Error.Render("Skipped"), skipCount,
+		style.Name.Render("Total Time"), style.Success.Render(result.Duration.String()))
 
 	fmt.Println(summary)
 }
