@@ -3,12 +3,16 @@ package java
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/whywhathow/jenv/internal/config"
 	"github.com/whywhathow/jenv/internal/env"
 	"github.com/whywhathow/jenv/internal/sys"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 type JDK struct {
@@ -18,6 +22,13 @@ type JDK struct {
 
 var ErrNoJDKConfigured = errors.New("no JDK configured")
 var cfg *config.Config
+
+// Simple cache for directory scan results to improve performance and avoid redundant scans
+var (
+	scanCache      = make(map[string]time.Time)
+	scanCacheMutex sync.RWMutex
+	cacheTimeout   = 5 * time.Minute // Cache results for 5 minutes
+)
 
 /**
  *1.  init config.json, backup.json
@@ -158,68 +169,256 @@ func GetCurrentJDK() (config.JDK, error) {
 
 	return config.JDK{}, config.ErrJDKNotFound
 }
-func ScanJDK(dir string) []JDK {
-	// Validate directory
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		fmt.Printf("Directory does not exist: %s\n", dir)
-		return nil
-	}
 
-	// Scan for JDKs
-	jdks := scanForJDKs(dir)
-	if len(jdks) == 0 {
-		fmt.Println("No valid JDKs found in the specified directory")
-		return nil
-	}
-
-	return jdks
+// ScanResult 包含扫描操作的详细结果
+type ScanResult struct {
+	JDKs     []JDK
+	Duration time.Duration
+	Scanned  int // 实际扫描的目录数
+	Skipped  int // 因权限等问题跳过的目录数
+	Excluded int // 因已存在或规则被排除的目录数
 }
 
-/*
-*
-1 . 扫描每一个目录
-2. 对于是 jdk 所在的目录， ,生成后退出当前目录，不再搜索当前目录以及其 child
-3. 继续遍历。
-*/
-func scanForJDKs(dir string) []JDK {
-	var jdks []JDK
-	queue := []string{dir}
+// Task 定义了需要扫描的目录任务
+type WorkerTask struct {
+	Path  string
+	Depth int
+}
 
-	for len(queue) > 0 {
-		path := queue[0]
-		queue = queue[1:]
-		entries, _ := os.ReadDir(path)
+// WorkerResult 是工人完成任务后返回的结果
+type WorkerResult struct {
+	FoundJDK    *JDK
+	SubDirTasks []WorkerTask
+	IsSkipped   bool
+	IsExcluded  bool
+}
+
+// maxDepth 定义了最大扫描深度
+const maxDepth = 5
+
+// numWorkers 定义了并发的工人数量
+var numWorkers = runtime.NumCPU() * 2 // 保持动态，但可以根据需要调整
+
+// ScanJDK 是一个简单的包装器，只返回找到的JDK列表
+func ScanJDK(dir string) []JDK {
+	result := ScanJDKWithStats(dir)
+	return result.JDKs
+}
+
+// ScanJDKWithStats 使用健壮的并发模型执行JDK扫描并返回详细统计信息
+func ScanJDKWithStats(dir string) ScanResult {
+	start := time.Now()
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		fmt.Printf("Directory does not exist: %s\n", dir)
+		return ScanResult{Duration: time.Since(start)}
+	}
+
+	existingPaths := getExistingJDKPaths()
+
+	// --- 调度中心-工人 并发模型 ---
+	tasksChan := make(chan WorkerTask, numWorkers*2)
+	resultsChan := make(chan WorkerResult, numWorkers*2)
+	var workerWg sync.WaitGroup
+
+	// 1. 启动固定数量的工人
+	for i := 0; i < numWorkers; i++ {
+		workerWg.Add(1)
+		go jdkScannerWorker(tasksChan, resultsChan, &workerWg, existingPaths)
+	}
+
+	// 2. 启动调度中心 goroutine
+	var finalJDKs []JDK
+	var stats ScanResult
+	var dispatcherWg sync.WaitGroup
+	dispatcherWg.Add(1)
+
+	go func() {
+		defer dispatcherWg.Done()
+		taskQueue := []WorkerTask{{Path: dir, Depth: 1}}
+		pendingTasks := 1
+
+		for pendingTasks > 0 {
+			var currentTask WorkerTask
+			var sendChan chan WorkerTask
+
+			if len(taskQueue) > 0 {
+				currentTask = taskQueue[0]
+				sendChan = tasksChan // 只有队列中有任务时，才准备发送
+			}
+
+			select {
+			case sendChan <- currentTask:
+				taskQueue = taskQueue[1:] // 任务已发送，从队列移除
+
+			case result := <-resultsChan:
+				pendingTasks-- // 一个任务完成了
+
+				// 更新统计数据
+				stats.Scanned++
+				if result.IsSkipped {
+					stats.Skipped++
+				}
+				if result.IsExcluded {
+					stats.Excluded++
+				}
+
+				// 如果找到了 JDK，收集它
+				if result.FoundJDK != nil {
+					finalJDKs = append(finalJDKs, *result.FoundJDK)
+				}
+
+				// 将新的子任务加入队列
+				if len(result.SubDirTasks) > 0 {
+					taskQueue = append(taskQueue, result.SubDirTasks...)
+					pendingTasks += len(result.SubDirTasks)
+				}
+			}
+		}
+
+		// 所有任务处理完毕，关闭任务通道，让工人们退出
+		close(tasksChan)
+	}()
+
+	// 3. 等待调度中心和所有工人都完成
+	dispatcherWg.Wait()
+	workerWg.Wait()
+
+	stats.JDKs = finalJDKs
+	stats.Duration = time.Since(start)
+
+	if len(stats.JDKs) == 0 {
+		fmt.Println("No valid JDKs found in the specified directory")
+	}
+
+	return stats
+}
+
+// jdkScannerWorker 是并发模型中的“工人”，负责处理单个目录的扫描
+func jdkScannerWorker(tasks <-chan WorkerTask, results chan<- WorkerResult, wg *sync.WaitGroup, existingPaths map[string]bool) {
+	defer wg.Done()
+	for task := range tasks {
+		res := WorkerResult{}
+
+		// 预过滤：在读取目录之前进行检查
+		if !shouldScanDirectory(task.Path) || task.Depth > maxDepth {
+			// if task.Depth > maxDepth {
+			res.IsSkipped = true
+			results <- res
+			continue
+		}
+
+		if isPathExcluded(task.Path, existingPaths) {
+			res.IsExcluded = true
+			results <- res
+			continue
+		}
+
+		// 核心逻辑：检查当前目录是否为JDK
+		if config.ValidateJavaPath(task.Path) {
+			res.FoundJDK = &JDK{Path: task.Path, Name: filepath.Base(task.Path)}
+			results <- res
+			continue // 找到JDK后，不再扫描其子目录
+		}
+
+		// 读取子目录
+		entries, err := os.ReadDir(task.Path)
+		if err != nil {
+			res.IsSkipped = true
+			results <- res
+			continue
+		}
+
+		// 准备子任务
 		for _, entry := range entries {
-			fullPath := filepath.Join(path, entry.Name())
-
-			// 预检2：通过目录特征快速判断
-			if info, _ := entry.Info(); !info.IsDir() {
-				continue
-			}
-
-			// 跳过 系统目录  res :  7s-2s
-			if (strings.EqualFold(entry.Name(), "Windows") && strings.HasPrefix(strings.ToLower(path), strings.ToLower(os.Getenv("SystemDrive")))) ||
-				strings.EqualFold(entry.Name(), "$Recycle.Bin") ||
-				strings.EqualFold(entry.Name(), "System Volume Information") {
-				continue
-			}
-
-			// 目录深度检查
-			if strings.Count(fullPath[len(dir):], string(os.PathSeparator)) > 3 {
-				continue
-			}
-
-			// 完整校验
-			if config.ValidateJavaPath(fullPath) {
-				jdks = append(jdks, JDK{Path: fullPath, Name: entry.Name()})
-				continue // 发现有效目录后跳过子目录
-			}
-
-			// 添加到队列继续扫描
 			if entry.IsDir() {
-				queue = append(queue, fullPath)
+				fullPath := filepath.Join(task.Path, entry.Name())
+				res.SubDirTasks = append(res.SubDirTasks, WorkerTask{Path: fullPath, Depth: task.Depth + 1})
+			}
+		}
+		results <- res
+	}
+}
+
+// --- 以下是您原有的辅助函数，我进行了一些微调和简化，以更好地服务于新的并发模型 ---
+
+// getExistingJDKPaths 保持不变，功能明确且高效
+func getExistingJDKPaths() map[string]bool {
+	existingPaths := make(map[string]bool)
+	jdks, err := ListJdks()
+	if err != nil {
+		return existingPaths
+	}
+	for _, jdk := range jdks {
+		normalizedPath, _ := filepath.Abs(jdk.Path)
+		existingPaths[strings.ToLower(normalizedPath)] = true
+	}
+	return existingPaths
+}
+
+// isPathExcluded 简化和优化
+func isPathExcluded(path string, existingPaths map[string]bool) bool {
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return true // 无法解析路径，跳过
+	}
+	normalizedPath := strings.ToLower(absPath)
+
+	// 精确匹配或子目录匹配
+	for existing := range existingPaths {
+		if strings.HasPrefix(normalizedPath, existing) {
+			// 确保是完全匹配或子目录，而不是 "c:\java\jdk1" 匹配 "c:\java\jdk11"
+			if len(normalizedPath) == len(existing) || normalizedPath[len(existing)] == os.PathSeparator {
+				return true
 			}
 		}
 	}
-	return jdks
+	return false
+}
+
+// shouldScanDirectory performs aggressive pre-filtering to skip directories that are unlikely to contain JDKs
+func shouldScanDirectory(path string) bool {
+
+	// Get directory name for filtering
+	dirName := strings.ToLower(filepath.Base(path))
+
+	// Skip common non-JDK directories aggressively
+	skipDirs := []string{
+		// System directories
+		"windows", "system32", "syswow64", "drivers", "winsxs",
+		"$recycle.bin", "system volume information", "recovery",
+
+		// Common application directories that won't have JDKs
+		"node_modules", ".git", ".svn", ".hg", "bin", "obj", "debug", "release",
+		"temp", "tmp", "cache", "logs", "log", "backup", "backups",
+		"downloads", "documents", "pictures", "music", "videos", "desktop",
+
+		// Development tools (but not JDK locations)
+		"visual studio", "microsoft visual studio", "jetbrains", "intellij",
+		"eclipse", "netbeans", "android studio", "xamarin",
+
+		// Package managers and build tools
+		"npm", "yarn", "gradle", "maven", ".m2", "nuget", "pip", "conda",
+
+		// Version control and IDE files
+		".vscode", ".idea", ".vs", "target", "build", "dist", "out",
+
+		// Common non-JDK subdirectories
+		"src", "source", "sources", "test", "tests", "doc", "docs", "documentation",
+		"examples", "samples", "demo", "demos", "tutorial", "tutorials",
+	}
+
+	for _, skip := range skipDirs {
+		if dirName == skip {
+			return false
+		}
+	}
+
+	// Skip directories with certain patterns
+	if strings.Contains(dirName, "temp") ||
+		strings.Contains(dirName, "cache") ||
+		strings.Contains(dirName, "backup") ||
+		strings.HasPrefix(dirName, "~") {
+		return false
+	}
+	return true
 }
