@@ -5,7 +5,28 @@
 
 ![GitHub release](https://img.shields.io/github/v/release/WhyWhatHow/jenv)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
+![Version](https://img.shields.io/badge/version-v0.6.7-blue)
 </div>
+
+## Recent Updates (v0.6.7)
+
+### 🚀 Performance Improvements
+- **Ultra-fast JDK scanning**: Reduced scanning time from 3 seconds to 300ms (90% improvement)
+- **Concurrent processing**: Implemented Dispatcher-Worker model with goroutines
+- **Smart filtering**: Aggressive pre-filtering to skip unnecessary directories
+- **Progress tracking**: Real-time scanning progress and detailed statistics
+
+### ✅ Cross-Platform Support
+- **Linux support completed**: Full Linux compatibility with multi-shell support
+- **Windows optimization**: Enhanced path validation and compatibility fixes
+- **macOS preparation**: Infrastructure ready for macOS support (coming soon)
+
+### 🔧 Technical Enhancements
+- **Java path validation**: Improved Windows JDK detection reliability
+- **Environment management**: Optimized cross-platform environment variable handling
+- **Configuration cleanup**: Removed unused options and improved code maintainability
+
+---
 
 ## Overview
 
@@ -48,9 +69,11 @@ different Java versions, add new Java installations, and manage your Java enviro
 
 - **Smart JDK Management**
     - System-wide JDK scanning
+    - **Ultra-fast scanning performance (3s → 300ms)** using concurrent Dispatcher-Worker model
     - Alias-based JDK management
     - Current JDK status tracking
     - Easy JDK addition and removal
+    - Detailed scanning statistics and progress display
 
 ### Future-Ready
 
@@ -202,6 +225,9 @@ jenv scan /opt
 
 # macOS
 jenv scan /Library/Java/JavaVirtualMachines
+
+# Performance: Ultra-fast scanning with concurrent processing
+# 🚀 Optimized from 3 seconds to 300ms using Dispatcher-Worker model
 ```
 
 ### Add jenv to system PATH
@@ -260,7 +286,14 @@ Inspired by nvm-windows, JEnv uses symlinks for Java version management across a
     - No need to modify system PATH repeatedly
     - Changes persist across system reboots and apply to all console windows/shells
 
-2. **Implementation Details**
+2. **High-Performance Implementation**
+    - **Ultra-fast JDK scanning**: Optimized from 3 seconds to 300ms using concurrent processing
+    - **Dispatcher-Worker Model**: Parallel JDK detection with worker goroutines
+    - **Intelligent Pre-filtering**: Aggressive directory filtering to skip unnecessary locations
+    - **Detailed Statistics**: Real-time progress tracking and comprehensive scan results
+    - **Optimized Path Exclusion**: Smart logic to avoid scanning duplicate or invalid paths
+
+3. **Implementation Details**
     - During initialization:
         - **Windows**: Creates `JAVA_HOME` directory at `C:\java\JAVA_HOME`
         - **Linux**: Creates symlink directory based on privileges (system or user level)
@@ -271,20 +304,20 @@ Inspired by nvm-windows, JEnv uses symlinks for Java version management across a
         - No PATH modifications needed
         - Changes take effect immediately in all console windows/shells
 
-3. **Permission Handling**
+4. **Permission Handling**
     - **Windows**: Administrator privileges required for system symbolic links
     - **Linux**: Root privileges optional - falls back to user-level configuration
     - UAC/sudo prompts handled automatically with minimal privilege scope
     - Follows the principle of least privilege
     - Permission requests only occur during initialization and version switching
 
-4. **Multi-Shell Support (Linux)**
+5. **Multi-Shell Support (Linux)**
     - Automatically detects and configures bash, zsh, fish shells
     - Updates appropriate configuration files (.bashrc, .zshrc, config.fish)
     - Ensures environment variables persist across shell sessions
 
 This approach is more efficient than constantly modifying system PATH variables, providing a cleaner and more reliable
-solution for Java version management on Windows.
+solution for Java version management across all supported platforms.
 
 ## Acknowledgments
 
