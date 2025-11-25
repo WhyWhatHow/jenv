@@ -1,0 +1,40 @@
+{
+  "lastUpdated": "2025-01-25T00:00:00Z",
+  "jenv": {
+    "version": "0.6.7",
+    "platforms": {
+      "windows-x64": {
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-windows-x86_64.zip",
+        "size": "2.1 MB",
+        "sha256": ""
+      },
+      "linux-x64": {
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-linux-x86_64.zip",
+        "size": "2.0 MB",
+        "sha256": ""
+      },
+      "macos-x64": {
+        "url": "",
+        "size": "",
+        "sha256": ""
+      },
+      "macos-arm64": {
+        "url": "",
+        "size": "",
+        "sha256": ""
+      }
+    }
+  },
+  "jdk": {
+    "versions": [8, 11, 17, 21],
+    "recommended": 11,
+    "distributions": {
+      "temurin": {
+        "name": "Eclipse Temurin",
+        "description": "Most popular open-source JDK distribution",
+        "recommended": true,
+        "versions": {}
+      }
+    }
+  }
+}
