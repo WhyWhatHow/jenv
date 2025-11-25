@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JEnv - Fast and easy Java version management tool. Download JEnv and JDK in 3 steps.">
+  <meta name="keywords" content="Java, JDK, version manager, jenv, development tools">
+  <title>JEnv - Java Version Manager</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-brand">
+        <span class="logo">☕</span>
+        <span class="brand-name">JEnv</span>
+      </div>
+      <div class="nav-actions">
+        <button class="lang-btn" id="lang-toggle" aria-label="Toggle language">EN</button>
+        <a href="https://github.com/WhyWhatHow/jenv" class="github-link" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="platform-badge">
+        <span class="badge-icon">✅</span>
+        <span class="badge-text">
+          <span data-i18n="detected">Detected</span>:
+          <strong id="platform-info">Loading...</strong>
+        </span>
+      </div>
+      <h1 class="hero-title" data-i18n="title">JEnv - Java Version Manager</h1>
+      <p class="hero-subtitle" data-i18n="tagline">Install JDK in 3 steps, no manual PATH configuration needed</p>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="quick-start">
+    <div class="container">
+      <h2 class="section-title" data-i18n="quickStart">🚀 Quick Start</h2>
+
+      <div class="steps">
+        <!-- Step 1: Download JEnv -->
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3 data-i18n="downloadJenv">Download JEnv</h3>
+          <p class="step-desc">
+            <span data-i18n="version">Version</span>:
+            <span id="jenv-version">Loading...</span>
+          </p>
+          <button class="download-btn primary" id="jenv-download" disabled>
+            <span class="btn-icon">⬇️</span>
+            <span data-i18n="downloading">Loading...</span>
+          </button>
+          <p class="file-size" id="jenv-size"></p>
+        </div>
+
+        <!-- Step 2: Download JDK -->
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3 data-i18n="downloadJdk">Download JDK</h3>
+          <div class="distribution-selector">
+            <label data-i18n="selectDistribution">Select distribution:</label>
+            <select id="dist-selector" class="dist-dropdown">
+              <option value="temurin">Eclipse Temurin (Recommended)</option>
+            </select>
+          </div>
+          <div class="version-selector">
+            <label data-i18n="selectVersion">Version:</label>
+            <select id="jdk-version" class="version-dropdown">
+              <option value="11" selected>JDK 11 (Recommended)</option>
+              <option value="17">JDK 17</option>
+              <option value="21">JDK 21</option>
+              <option value="8">JDK 8</option>
+            </select>
+          </div>
+          <button class="download-btn primary" id="jdk-download" disabled>
+            <span class="btn-icon">☕</span>
+            <span data-i18n="downloadJdk">Download JDK</span>
+          </button>
+          <p class="hint" data-i18n="jdkHint">💡 Not sure? JDK 11 is perfect for most beginners</p>
+        </div>
+
+        <!-- Step 3: Install -->
+        <div class="step-card full-width">
+          <div class="step-number">3</div>
+          <h3 data-i18n="install">Install & Use</h3>
+          <div class="code-block">
+            <pre><code id="install-commands">Loading...</code></pre>
+            <button class="copy-btn" id="copy-code" aria-label="Copy code">
+              <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title" data-i18n="whyJenv">Why JEnv?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 data-i18n="feature1Title">Fast Switching</h3>
+          <p data-i18n="feature1Desc">Symlink-based, switch JDK in 300ms</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🪟</div>
+          <h3 data-i18n="feature2Title">Windows Optimized</h3>
+          <p data-i18n="feature2Desc">Optimized for Windows 10/11, auto privilege handling</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3 data-i18n="feature3Title">Modern Experience</h3>
+          <p data-i18n="feature3Desc">Colorful CLI, light/dark theme support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title" data-i18n="faqTitle">FAQ</h2>
+      <div class="accordion" id="faq-accordion">
+        <!-- FAQ items will be populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p data-i18n="footerText">JEnv - Make Java version management easy</p>
+      <p>
+        <a href="https://github.com/WhyWhatHow/jenv" target="_blank" rel="noopener">GitHub</a> ·
+        <a href="https://github.com/WhyWhatHow/jenv/blob/main/LICENSE" target="_blank" rel="noopener">
+          <span data-i18n="license">License</span>
+        </a> ·
+        Made with ❤️ by <a href="https://github.com/WhyWhatHow" target="_blank" rel="noopener">WhyWhatHow</a>
+      </p>
+      <p class="last-updated">
+        <span data-i18n="lastUpdated">Last updated</span>:
+        <span id="data-timestamp">-</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading" style="display: none;">
+    <div class="spinner"></div>
+    <p data-i18n="loading">Loading...</p>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/i18n.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
