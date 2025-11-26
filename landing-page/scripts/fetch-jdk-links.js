@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Fetch JDK download links from various distributors
+ * Fetch JDK download links from Foojay DiscoAPI
  * and update data/jdk.json
  */
 
@@ -8,15 +8,31 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const PLATFORMS = ['windows-x64', 'linux-x64', 'linux-arm64', 'macos-x64', 'macos-arm64'];
-const JDK_VERSIONS = [8, 11, 17, 21];
+const JDK_VERSIONS = [8, 11, 17, 21, 25]; // LTS + latest versions
+
+// JDK distributions to fetch (from Foojay)
+// For testing, limit to 3 main distributions
+const DISTRIBUTIONS = [
+  { id: 'temurin', name: 'Eclipse Temurin', desc: 'Most popular open-source JDK', recommended: true },
+  { id: 'zulu', name: 'Azul Zulu', desc: 'Enterprise-ready OpenJDK' },
+  { id: 'corretto', name: 'Amazon Corretto', desc: 'Production-ready OpenJDK' }
+  // Uncomment below for full list
+  // { id: 'liberica', name: 'BellSoft Liberica', desc: 'Flexible OpenJDK builds' },
+  // { id: 'microsoft', name: 'Microsoft Build of OpenJDK', desc: 'Microsoft\'s OpenJDK' },
+  // { id: 'oracle_open_jdk', name: 'Oracle OpenJDK', desc: 'Official OpenJDK builds' },
+  // { id: 'graalvm_ce17', name: 'GraalVM CE 17', desc: 'High-performance runtime' },
+  // { id: 'graalvm_ce21', name: 'GraalVM CE 21', desc: 'High-performance runtime' },
+  // { id: 'sapmachine', name: 'SapMachine', desc: 'SAP\'s OpenJDK' },
+  // { id: 'dragonwell', name: 'Alibaba Dragonwell', desc: 'Alibaba\'s OpenJDK' }
+];
 
 // Platform mapping for different APIs
 const PLATFORM_MAP = {
-  'windows-x64': { adoptium: { os: 'windows', arch: 'x64' }, jenv: 'windows-x86_64' },
-  'linux-x64': { adoptium: { os: 'linux', arch: 'x64' }, jenv: 'linux-x86_64' },
-  'linux-arm64': { adoptium: { os: 'linux', arch: 'aarch64' }, jenv: 'linux-aarch_64' },
-  'macos-x64': { adoptium: { os: 'mac', arch: 'x64' }, jenv: 'osx-x86_64' },
-  'macos-arm64': { adoptium: { os: 'mac', arch: 'aarch64' }, jenv: 'osx-aarch_64' }
+  'windows-x64': { foojay: { os: 'windows', arch: 'x64' }, jenv: 'windows-x86_64' },
+  'linux-x64': { foojay: { os: 'linux', arch: 'x64' }, jenv: 'linux-x86_64' },
+  'linux-arm64': { foojay: { os: 'linux', arch: 'aarch64' }, jenv: 'linux-aarch_64' },
+  'macos-x64': { foojay: { os: 'macos', arch: 'x64' }, jenv: 'osx-x86_64' },
+  'macos-arm64': { foojay: { os: 'macos', arch: 'aarch64' }, jenv: 'osx-aarch_64' }
 };
 
 /**
@@ -71,54 +87,76 @@ async function fetchJenvReleases() {
 }
 
 /**
- * Fetch JDK from Adoptium (Eclipse Temurin)
+ * Fetch JDK from Foojay DiscoAPI
  */
-async function fetchAdoptiumJDK(version, platform) {
-  const { os, arch } = PLATFORM_MAP[platform].adoptium;
-  const url = `https://api.adoptium.net/v3/assets/latest/${version}/hotspot?architecture=${arch}&image_type=jdk&os=${os}&vendor=eclipse`;
+async function fetchFoojayJDK(distribution, version, platform) {
+  const { os, arch } = PLATFORM_MAP[platform].foojay;
+
+  // Build query parameters
+  const params = new URLSearchParams({
+    version: version,
+    distribution: distribution,
+    operating_system: os,
+    architecture: arch,
+    archive_type: os === 'windows' ? 'zip' : 'tar.gz',
+    package_type: 'jdk',
+    latest: 'available',
+    release_status: 'ga'
+  });
+
+  const url = `https://api.foojay.io/disco/v3.0/packages?${params}`;
 
   try {
     const data = await fetchWithRetry(url);
-    if (!data || data.length === 0) {
-      console.warn(`No Adoptium JDK found for ${platform} version ${version}`);
+    if (!data || !data.result || data.result.length === 0) {
+      console.warn(`No Foojay JDK found for ${distribution} ${version} on ${platform}`);
       return null;
     }
 
-    const binary = data[0].binary;
+    // Get the first (latest) package
+    const pkg = data.result[0];
     return {
-      url: binary.package.link,
-      size: formatBytes(binary.package.size),
-      sha256: binary.package.checksum
+      url: pkg.links?.pkg_download_redirect || pkg.filename,
+      size: formatBytes(pkg.size || 0),
+      sha256: pkg.checksum || '',
+      javaVersion: pkg.java_version,
+      distribution: pkg.distribution
     };
   } catch (error) {
-    console.error(`Failed to fetch Adoptium JDK ${version} for ${platform}:`, error.message);
+    console.error(`Failed to fetch Foojay ${distribution} JDK ${version} for ${platform}:`, error.message);
     return null;
   }
 }
 
 /**
- * Fetch all Adoptium versions
+ * Fetch all versions for a distribution
  */
-async function fetchAdoptiumDistribution() {
-  console.log('Fetching Adoptium (Temurin) JDK links...');
+async function fetchDistributionData(dist) {
+  console.log(`Fetching ${dist.name}...`);
   const versions = {};
 
   for (const version of JDK_VERSIONS) {
+    // Skip incompatible versions
+    if (dist.id === 'graalvm_ce17' && version !== 17) continue;
+    if (dist.id === 'graalvm_ce21' && version !== 21) continue;
+
+    console.log(`  JDK ${version}...`);
     versions[version] = {};
-    console.log(`  Fetching JDK ${version}...`);
 
     for (const platform of PLATFORMS) {
-      const jdk = await fetchAdoptiumJDK(version, platform);
+      const jdk = await fetchFoojayJDK(dist.id, version, platform);
       if (jdk) {
         versions[version][platform] = jdk;
       }
+      // Small delay to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
   return {
-    name: 'Eclipse Temurin',
-    description: 'Most popular open-source JDK distribution',
-    recommended: true,
+    name: dist.name,
+    description: dist.desc,
+    recommended: dist.recommended || false,
     versions
   };
 }
@@ -137,15 +175,19 @@ function formatBytes(bytes) {
  */
 async function main() {
   try {
-    console.log('Starting JDK links fetch...\n');
+    console.log('Starting JDK links fetch from Foojay DiscoAPI...\n');
 
     // Fetch JEnv releases
     const jenv = await fetchJenvReleases();
     console.log(`✓ JEnv version ${jenv.version} fetched\n`);
 
-    // Fetch Adoptium JDK
-    const temurin = await fetchAdoptiumDistribution();
-    console.log('✓ Adoptium JDK fetched\n');
+    // Fetch JDK distributions
+    const distributions = {};
+    for (const dist of DISTRIBUTIONS) {
+      const distData = await fetchDistributionData(dist);
+      distributions[dist.id] = distData;
+      console.log(`✓ ${dist.name} fetched\n`);
+    }
 
     // Build final JSON
     const output = {
@@ -153,10 +195,8 @@ async function main() {
       jenv,
       jdk: {
         versions: JDK_VERSIONS,
-        recommended: 11,
-        distributions: {
-          temurin
-        }
+        recommended: [11, 17],
+        distributions
       }
     };
 
@@ -170,10 +210,18 @@ async function main() {
     console.log(`  JEnv version: ${jenv.version}`);
     console.log(`  JEnv platforms: ${Object.keys(jenv.platforms).length}`);
     console.log(`  JDK versions: ${JDK_VERSIONS.length}`);
-    console.log(`  Distributions: 1 (Temurin)`);
+    console.log(`  Distributions: ${Object.keys(distributions).length}`);
+
+    // Print distribution stats
+    console.log('\nDistributions:');
+    for (const [id, dist] of Object.entries(distributions)) {
+      const versionCount = Object.keys(dist.versions).length;
+      console.log(`  - ${dist.name}: ${versionCount} versions`);
+    }
 
   } catch (error) {
     console.error('\n❌ Error:', error.message);
+    console.error(error.stack);
     process.exit(1);
   }
 }
