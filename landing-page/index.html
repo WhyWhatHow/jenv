@@ -63,21 +63,23 @@
         <div class="step-card">
           <div class="step-number">2</div>
           <h3 data-i18n="downloadJdk">Download JDK</h3>
-          <div class="distribution-selector">
-            <label data-i18n="selectDistribution">Select distribution:</label>
-            <select id="dist-selector" class="dist-dropdown">
-              <option value="temurin">Eclipse Temurin (Recommended)</option>
-            </select>
+
+          <div class="selector-group">
+            <div class="selector-item">
+              <label data-i18n="selectDistribution">Select distribution:</label>
+              <select id="dist-selector" class="dropdown">
+                <!-- Will be populated by JavaScript -->
+              </select>
+            </div>
+
+            <div class="selector-item">
+              <label data-i18n="selectVersion">Version:</label>
+              <select id="jdk-version" class="dropdown">
+                <!-- Will be populated by JavaScript -->
+              </select>
+            </div>
           </div>
-          <div class="version-selector">
-            <label data-i18n="selectVersion">Version:</label>
-            <select id="jdk-version" class="version-dropdown">
-              <option value="11" selected>JDK 11 (Recommended)</option>
-              <option value="17">JDK 17</option>
-              <option value="21">JDK 21</option>
-              <option value="8">JDK 8</option>
-            </select>
-          </div>
+
           <button class="download-btn primary" id="jdk-download" disabled>
             <span class="btn-icon">☕</span>
             <span data-i18n="downloadJdk">Download JDK</span>

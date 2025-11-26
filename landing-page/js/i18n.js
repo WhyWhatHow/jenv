@@ -24,8 +24,15 @@ const translations = {
 
     // JDK Selection
     selectDistribution: 'Select distribution',
+    selectDistributions: 'Select distributions',
     selectVersion: 'Version',
+    selectVersions: 'Select versions',
     jdkHint: '💡 Not sure? JDK 11 is perfect for most beginners',
+    distHint: '💡 Select one or more JDK distributions',
+    versionHint: '💡 Recommended: JDK 11 or 17',
+    selected: 'Selected',
+    packages: 'packages',
+    downloadSelected: 'Download Selected',
 
     // Features
     whyJenv: 'Why JEnv?',
@@ -48,6 +55,7 @@ const translations = {
     copy: 'Copy',
     copied: 'Copied to clipboard',
     copyFailed: 'Copy failed, please copy manually',
+    downloadStarted: 'Downloads started...',
 
     // Errors
     loading: 'Loading...',
@@ -80,8 +88,15 @@ const translations = {
 
     // JDK Selection
     selectDistribution: '选择发行版',
+    selectDistributions: '选择发行版',
     selectVersion: '版本',
+    selectVersions: '选择版本',
     jdkHint: '💡 不确定选哪个？JDK 11 适合大多数初学者',
+    distHint: '💡 可以选择一个或多个 JDK 发行版',
+    versionHint: '💡 推荐：JDK 11 或 17',
+    selected: '已选择',
+    packages: '个包',
+    downloadSelected: '下载所选',
 
     // Features
     whyJenv: '为什么选择 JEnv?',
@@ -104,6 +119,7 @@ const translations = {
     copy: '复制',
     copied: '已复制到剪贴板',
     copyFailed: '复制失败，请手动复制',
+    downloadStarted: '开始下载...',
 
     // Errors
     loading: '加载中...',

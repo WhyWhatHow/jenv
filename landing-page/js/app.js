@@ -173,43 +173,101 @@ function renderJenvDownload() {
  * Render JDK download section
  */
 function renderJdkDownload() {
-  const versionSelector = document.getElementById('jdk-version');
-  const downloadBtn = document.getElementById('jdk-download');
-
-  // Update download button
-  updateJdkDownloadButton();
-
-  // Add event listener
-  versionSelector.addEventListener('change', updateJdkDownloadButton);
+  populateDistributionSelector();
+  populateVersionSelector();
+  setupJdkDownloadHandlers();
 }
 
 /**
- * Update JDK download button
+ * Populate distribution selector
  */
-function updateJdkDownloadButton() {
-  const dist = 'temurin'; // Currently only Temurin supported
-  const version = document.getElementById('jdk-version').value;
-  const platformKey = getPlatformKey(currentPlatform);
+function populateDistributionSelector() {
+  const selector = document.getElementById('dist-selector');
+  selector.innerHTML = '';
+
+  const distributions = Object.entries(appData.jdk.distributions);
+
+  distributions.forEach(([id, dist]) => {
+    const option = document.createElement('option');
+    option.value = id;
+    option.textContent = dist.name;
+    if (dist.recommended) {
+      option.textContent += ' ⭐';
+      option.selected = true;
+    }
+    selector.appendChild(option);
+  });
+}
+
+/**
+ * Populate version selector
+ */
+function populateVersionSelector() {
+  const selector = document.getElementById('jdk-version');
+  selector.innerHTML = '';
+
+  const versions = appData.jdk.versions;
+  const recommended = Array.isArray(appData.jdk.recommended)
+    ? appData.jdk.recommended
+    : [appData.jdk.recommended];
+
+  versions.forEach(version => {
+    const option = document.createElement('option');
+    option.value = version;
+    option.textContent = `JDK ${version}`;
+
+    if (recommended.includes(version)) {
+      option.textContent += ' ⭐';
+      // Select first recommended version
+      if (!selector.value && recommended.includes(version)) {
+        option.selected = true;
+      }
+    }
+
+    selector.appendChild(option);
+  });
+}
+
+/**
+ * Setup JDK download handlers
+ */
+function setupJdkDownloadHandlers() {
+  const distSelector = document.getElementById('dist-selector');
+  const versionSelector = document.getElementById('jdk-version');
   const downloadBtn = document.getElementById('jdk-download');
 
-  const jdkInfo = appData.jdk.distributions[dist]?.versions[version]?.[platformKey];
+  const updateDownloadButton = () => {
+    const dist = distSelector.value;
+    const version = versionSelector.value;
+    const platformKey = getPlatformKey(currentPlatform);
 
-  if (jdkInfo && jdkInfo.url) {
-    downloadBtn.disabled = false;
-    downloadBtn.onclick = () => {
-      trackDownload('jdk', platformKey, dist, version);
-      window.open(jdkInfo.url, '_blank');
-    };
-    const btnText = `${t('download', currentLang)} JDK ${version}`;
-    if (jdkInfo.size) {
-      btnText += ` (${jdkInfo.size})`;
+    const jdkInfo = appData.jdk.distributions[dist]?.versions[version]?.[platformKey];
+
+    if (jdkInfo && jdkInfo.url) {
+      downloadBtn.disabled = false;
+      downloadBtn.onclick = () => {
+        trackDownload('jdk', platformKey, dist, version);
+        window.open(jdkInfo.url, '_blank');
+      };
+
+      const distName = appData.jdk.distributions[dist]?.name || dist;
+      let btnText = `${t('download', currentLang)} ${distName} ${version}`;
+      if (jdkInfo.size) {
+        btnText += ` (${jdkInfo.size})`;
+      }
+      downloadBtn.querySelector('span:last-child').textContent = btnText;
+    } else {
+      downloadBtn.disabled = true;
+      downloadBtn.querySelector('span:last-child').textContent =
+        t('notAvailable', currentLang);
     }
-    downloadBtn.querySelector('span:last-child').textContent = btnText;
-  } else {
-    downloadBtn.disabled = true;
-    downloadBtn.querySelector('span:last-child').textContent =
-      t('notAvailable', currentLang);
-  }
+  };
+
+  distSelector.addEventListener('change', updateDownloadButton);
+  versionSelector.addEventListener('change', updateDownloadButton);
+
+  // Initial update
+  updateDownloadButton();
 }
 
 /**
