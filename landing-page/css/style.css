@@ -86,8 +86,10 @@ body {
   color: var(--text-light);
 }
 
-.logo {
-  font-size: 2rem;
+.logo-img {
+  height: 2rem;
+  width: auto;
+  display: block;
 }
 
 .nav-actions {
@@ -123,26 +125,6 @@ body {
 .hero {
   padding: 4rem 0;
   text-align: center;
-}
-
-.platform-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--bg-dark-2);
-  border-radius: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow);
-  animation: fadeInUp 0.5s ease;
-}
-
-.badge-icon {
-  font-size: 1.25rem;
-}
-
-.badge-text {
-  color: var(--text-light-2);
 }
 
 .hero-title {
@@ -748,8 +730,8 @@ body {
     font-size: 1.25rem;
   }
 
-  .logo {
-    font-size: 1.5rem;
+  .logo-img {
+    height: 1.5rem;
   }
 }
 

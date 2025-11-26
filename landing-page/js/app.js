@@ -117,10 +117,6 @@ function renderMobile() {
  * Render page
  */
 function renderPage() {
-  // Update platform info
-  document.getElementById('platform-info').textContent =
-    getPlatformName(currentPlatform, currentLang);
-
   // Update last updated timestamp
   if (appData.lastUpdated) {
     const date = new Date(appData.lastUpdated);
