@@ -1,9 +1,12 @@
-🚀 Introducing JEnv: The fastest Java version manager optimized for Windows!
+🔥 Java devs, meet JEnv – your ultimate Java environment manager!
 
-⚡️ Switch Java versions instantly with symlink-based architecture
-🔄 One-time PATH setup, global effect
-🪟 Windows-first design with smart UAC handling
+✨ Key Features:
+✅ Lightning-fast switching: Symlink-based architecture for instant Java version swaps (permanent effect after one-time PATH setup)
+✅ Cross-platform ready: Full Windows/Linux support, macOS in development, multi-shell compatibility
+✅ Smart management: 300ms ultra-fast JDK scanning (90% faster than legacy tools!), concurrent processing + progress tracking
+✅ Modern CLI: Theme switching + colorful output for a polished experience
 
-Try it now: https://github.com/WhyWhatHow/jenv
+v0.6.7 updates: Full Linux compatibility, Windows path optimization, 300ms scan speed
 
-#Java #Windows #DevTools
+Tired of Java version chaos? JEnv solves it in one click! → https://github.com/WhyWhatHow/jenv
+#JEnv #JavaDev #WindowsDev
