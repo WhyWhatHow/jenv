@@ -28,6 +28,18 @@
 
 ---
 
+## 🌐 Landing Page
+
+访问我们的 [Landing Page](landing-page/) 快速开始：
+- **一键下载** JEnv 和 JDK
+- **自动平台检测**（Windows/Linux/macOS x64/arm64）
+- **多语言支持**（English/中文）
+- **交互式安装指南**
+
+Landing Page 每周两次自动更新最新的 JEnv 版本和 JDK 下载链接（周一和周四）。
+
+---
+
 ## Overview
 
 `Jenv` is a command-line tool for managing multiple Java versions on your system. It allows you to easily switch between

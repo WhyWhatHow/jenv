@@ -9,7 +9,7 @@ A modern, responsive landing page for JEnv - the fast and easy Java version mana
 - 🌍 **Internationalization**: Supports English and Chinese with automatic language detection
 - 🎨 **Modern UI**: Dark theme with smooth animations and responsive design
 - 📱 **Mobile Friendly**: Optimized for desktop with mobile fallback page
-- 🤖 **Auto-Updates**: GitHub Actions automatically fetch latest JDK links every 6 hours
+- 🤖 **Auto-Updates**: GitHub Actions automatically fetch latest JDK links twice per week (Monday and Thursday)
 - ⚡ **Zero Runtime Cost**: Pure static site with pre-generated data
 
 ## Quick Start
@@ -69,9 +69,6 @@ landing-page/
 │   └── jdk.json           # JDK and JEnv download data (auto-generated)
 ├── scripts/
 │   └── fetch-jdk-links.js # Script to fetch JDK links
-├── .github/
-│   └── workflows/
-│       └── fetch-jdk-links.yml  # Auto-update workflow
 └── README.md              # This file
 ```
 
@@ -127,9 +124,10 @@ echo "jenv.yourdomain.com" > CNAME
 
 ### JDK Link Updates
 
-The GitHub Actions workflow (`.github/workflows/fetch-jdk-links.yml`) runs automatically:
-- **Schedule**: Every 6 hours
-- **Manual Trigger**: Can be triggered manually from Actions tab
+The GitHub Actions workflow (located at project root `.github/workflows/fetch-jdk-links.yml`) runs automatically:
+- **Schedule**: Twice per week (Monday and Thursday at 00:00 UTC / 8:00 AM Beijing)
+- **Manual Trigger**: Can be triggered manually from GitHub Actions tab
+- **Auto-Trigger**: Runs when scripts or workflow file is modified
 
 The workflow:
 1. Fetches latest JEnv releases from GitHub API

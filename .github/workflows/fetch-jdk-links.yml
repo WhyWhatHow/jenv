@@ -2,7 +2,8 @@ name: Fetch JDK Links
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Run every 6 hours
+    - cron: '0 0 * * 1'  # Every Monday at 00:00 UTC (8:00 AM Beijing)
+    - cron: '0 0 * * 4'  # Every Thursday at 00:00 UTC (8:00 AM Beijing)
   workflow_dispatch:        # Allow manual trigger
   push:
     paths:
