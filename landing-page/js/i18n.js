@@ -16,7 +16,7 @@ const translations = {
     typingMessages: [
       '300ms to switch JDK versions',
       'Zero manual PATH configuration',
-      'Works on Windows & Linux'
+      'Works on Windows, macOS & Linux'
     ],
 
     // Quick Start
@@ -89,7 +89,7 @@ const translations = {
     typingMessages: [
       '300ms 切换 JDK 版本',
       '无需手动配置环境变量',
-      '支持 Windows 和 Linux'
+      '支持 Windows, macOS 和 Linux'
     ],
 
     // Quick Start
