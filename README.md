@@ -6,6 +6,9 @@
 ![GitHub release](https://img.shields.io/github/v/release/WhyWhatHow/jenv)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
 ![Version](https://img.shields.io/badge/version-v0.6.7-blue)
+
+**🚀 [Quick Start with Landing Page](landing-page/)** - One-click downloads with automatic platform detection (Windows/Linux/macOS) • Multi-language support (EN/中文) • Updated bi-weekly
+
 </div>
 
 ## Recent Updates (v0.6.7)
@@ -25,18 +28,6 @@
 - **Java path validation**: Improved Windows JDK detection reliability
 - **Environment management**: Optimized cross-platform environment variable handling
 - **Configuration cleanup**: Removed unused options and improved code maintainability
-
----
-
-## 🌐 Landing Page
-
-访问我们的 [Landing Page](landing-page/) 快速开始：
-- **一键下载** JEnv 和 JDK
-- **自动平台检测**（Windows/Linux/macOS x64/arm64）
-- **多语言支持**（English/中文）
-- **交互式安装指南**
-
-Landing Page 每周两次自动更新最新的 JEnv 版本和 JDK 下载链接（周一和周四）。
 
 ---
 
