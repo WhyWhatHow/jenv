@@ -123,7 +123,7 @@ body {
    ============================================ */
 
 .hero {
-  padding: 4rem 0;
+  padding: 4rem 0 2rem;
   text-align: center;
 }
 
@@ -146,12 +146,41 @@ body {
   animation: fadeInUp 0.5s ease 0.2s both;
 }
 
+/* Typing Effect */
+.typing-container {
+  padding: 2rem 0 1rem;
+  text-align: center;
+  min-height: 60px;
+}
+
+.typing-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  animation: fadeInUp 0.5s ease 0.3s both;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.125rem;
+  background: var(--primary);
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* ============================================
    Quick Start Section
    ============================================ */
 
 .quick-start {
-  padding: 4rem 0;
+  padding: 2rem 0 4rem;
 }
 
 .section-title {
@@ -721,6 +750,10 @@ body {
   }
 
   .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .typing-text {
     font-size: 1rem;
   }
 

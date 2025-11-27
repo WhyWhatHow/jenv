@@ -7,6 +7,58 @@ let appData = null;
 let currentPlatform = null;
 let detectedPlatform = null; // Store the auto-detected platform
 let currentLang = 'en';
+let typingInterval = null;
+
+/**
+ * Typing effect
+ */
+function startTypingEffect() {
+  const typingTextEl = document.getElementById('typing-text');
+  if (!typingTextEl) return;
+
+  const messages = translations[currentLang]?.typingMessages || translations.en.typingMessages;
+  let messageIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+
+  function type() {
+    const currentMessage = messages[messageIndex];
+
+    if (isDeleting) {
+      // Delete character
+      typingTextEl.textContent = currentMessage.substring(0, charIndex - 1);
+      charIndex--;
+
+      if (charIndex === 0) {
+        isDeleting = false;
+        messageIndex = (messageIndex + 1) % messages.length;
+        setTimeout(type, 500); // Pause before typing next message
+        return;
+      }
+    } else {
+      // Type character
+      typingTextEl.textContent = currentMessage.substring(0, charIndex + 1);
+      charIndex++;
+
+      if (charIndex === currentMessage.length) {
+        isDeleting = true;
+        setTimeout(type, 2000); // Pause when message is complete
+        return;
+      }
+    }
+
+    const typingSpeed = isDeleting ? 50 : 100;
+    setTimeout(type, typingSpeed);
+  }
+
+  // Clear existing interval if any
+  if (typingInterval) {
+    clearTimeout(typingInterval);
+  }
+
+  // Start typing
+  type();
+}
 
 /**
  * Detect user platform
@@ -556,6 +608,9 @@ function toggleLanguage() {
 
   // Re-render dynamic content
   renderPage();
+
+  // Restart typing effect with new language
+  startTypingEffect();
 }
 
 /**
@@ -601,6 +656,9 @@ async function init() {
 
     // Setup event listeners
     setupEventListeners();
+
+    // Start typing effect
+    startTypingEffect();
 
   } catch (error) {
     console.error('Initialization error:', error);

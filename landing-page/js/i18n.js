@@ -12,6 +12,13 @@ const translations = {
     detected: 'Detected',
     tagline: 'Install JDK in 3 steps, no manual PATH configuration needed',
 
+    // Typing effect messages
+    typingMessages: [
+      '300ms to switch JDK versions',
+      'Zero manual PATH configuration',
+      'Works on Windows & Linux'
+    ],
+
     // Quick Start
     quickStart: '🚀 Quick Start',
     downloadJenv: 'Download JEnv',
@@ -77,6 +84,13 @@ const translations = {
     // Hero
     detected: '检测到',
     tagline: '3 步完成 JDK 安装，再也不用手动配置环境变量',
+
+    // Typing effect messages
+    typingMessages: [
+      '300ms 切换 JDK 版本',
+      '无需手动配置环境变量',
+      '支持 Windows 和 Linux'
+    ],
 
     // Quick Start
     quickStart: '🚀 快速开始',
