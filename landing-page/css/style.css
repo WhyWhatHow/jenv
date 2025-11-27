@@ -243,6 +243,28 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-light-2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.detected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.detected-badge::before {
+  content: "✓";
+  font-weight: 700;
 }
 
 /* Dropdown Styles */

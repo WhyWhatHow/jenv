@@ -57,6 +57,17 @@
           <div class="step-number">2</div>
           <h3 data-i18n="downloadJdk">Download JDK</h3>
 
+          <!-- Platform Selector -->
+          <div class="selector-item">
+            <label>
+              <span data-i18n="yourPlatform">Your Platform</span>:
+              <span class="detected-badge" data-i18n="autoDetected">(Auto-detected)</span>
+            </label>
+            <select id="platform-selector" class="dropdown">
+              <!-- Will be populated by JavaScript -->
+            </select>
+          </div>
+
           <div class="selector-group">
             <div class="selector-item">
               <label data-i18n="selectDistribution">Select distribution:</label>

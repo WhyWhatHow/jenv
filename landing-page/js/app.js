@@ -5,6 +5,7 @@
 // Global state
 let appData = null;
 let currentPlatform = null;
+let detectedPlatform = null; // Store the auto-detected platform
 let currentLang = 'en';
 
 /**
@@ -169,9 +170,42 @@ function renderJenvDownload() {
  * Render JDK download section
  */
 function renderJdkDownload() {
+  populatePlatformSelector();
   populateDistributionSelector();
   populateVersionSelector();
   setupJdkDownloadHandlers();
+}
+
+/**
+ * Populate platform selector
+ */
+function populatePlatformSelector() {
+  const selector = document.getElementById('platform-selector');
+  const currentSelection = selector.value || getPlatformKey(detectedPlatform);
+  selector.innerHTML = '';
+
+  const platforms = [
+    { os: 'windows', arch: 'x64' },
+    { os: 'windows', arch: 'arm64' },
+    { os: 'linux', arch: 'x64' },
+    { os: 'linux', arch: 'arm64' },
+    { os: 'macos', arch: 'x64' },
+    { os: 'macos', arch: 'arm64' }
+  ];
+
+  platforms.forEach(platform => {
+    const option = document.createElement('option');
+    const platformKey = getPlatformKey(platform);
+    option.value = platformKey;
+    option.textContent = getPlatformName(platform, currentLang);
+
+    // Select the current platform (or detected platform if none selected)
+    if (platformKey === currentSelection) {
+      option.selected = true;
+    }
+
+    selector.appendChild(option);
+  });
 }
 
 /**
@@ -228,14 +262,19 @@ function populateVersionSelector() {
  * Setup JDK download handlers
  */
 function setupJdkDownloadHandlers() {
+  const platformSelector = document.getElementById('platform-selector');
   const distSelector = document.getElementById('dist-selector');
   const versionSelector = document.getElementById('jdk-version');
   const downloadBtn = document.getElementById('jdk-download');
 
   const updateDownloadButton = () => {
+    // Update currentPlatform from selector
+    const platformKey = platformSelector.value;
+    const [os, arch] = platformKey.split('-');
+    currentPlatform = { os, arch };
+
     const dist = distSelector.value;
     const version = versionSelector.value;
-    const platformKey = getPlatformKey(currentPlatform);
 
     const jdkInfo = appData.jdk.distributions[dist]?.versions[version]?.[platformKey];
 
@@ -257,8 +296,15 @@ function setupJdkDownloadHandlers() {
       downloadBtn.querySelector('span:last-child').textContent =
         t('notAvailable', currentLang);
     }
+
+    // Also update JEnv download button when platform changes
+    renderJenvDownload();
+
+    // Update install commands
+    renderInstallCommands();
   };
 
+  platformSelector.addEventListener('change', updateDownloadButton);
   distSelector.addEventListener('change', updateDownloadButton);
   versionSelector.addEventListener('change', updateDownloadButton);
 
@@ -532,6 +578,7 @@ async function init() {
   try {
     // Detect platform
     currentPlatform = detectPlatform();
+    detectedPlatform = currentPlatform; // Save detected platform
 
     // Check for mobile
     if (currentPlatform.os === 'mobile') {
