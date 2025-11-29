@@ -7,7 +7,7 @@
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
 ![Version](https://img.shields.io/badge/version-v0.6.7-blue)
 
-**🚀 [Quick Start with Landing Page](landing-page/)** - One-click downloads with automatic platform detection (Windows/Linux/macOS) • Multi-language support (EN/中文) • Updated bi-weekly
+**🚀 [Quick Start with Landing Page](https://jenv-win.vercel.app)** - One-click downloads with automatic platform detection (Windows/Linux/macOS) • Multi-language support (EN/中文) • Updated bi-weekly
 
 </div>
 

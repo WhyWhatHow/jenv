@@ -1,0 +1,191 @@
+name: Generate WinGet Manifests (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 0.6.7, leave empty for latest)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  generate-manifests:
+    name: Generate WinGet Manifests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            # 获取最新的 tag
+            VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+
+      - name: Download Release Assets
+        id: download
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          RELEASE_TAG="v${VERSION}"
+
+          # 下载 Windows x64 和 arm64 的 ZIP 包
+          echo "Downloading assets for release ${RELEASE_TAG}..."
+
+          # Windows x64
+          WIN_X64_URL="https://github.com/WhyWhatHow/jenv/releases/download/${RELEASE_TAG}/jenv-${VERSION}-windows-x86_64.zip"
+          echo "Downloading ${WIN_X64_URL}"
+          curl -L -o jenv-windows-x64.zip "${WIN_X64_URL}"
+
+          # Windows arm64
+          WIN_ARM64_URL="https://github.com/WhyWhatHow/jenv/releases/download/${RELEASE_TAG}/jenv-${VERSION}-windows-aarch_64.zip"
+          echo "Downloading ${WIN_ARM64_URL}"
+          curl -L -o jenv-windows-arm64.zip "${WIN_ARM64_URL}"
+
+          # 计算 SHA256（大写）
+          SHA256_X64=$(sha256sum jenv-windows-x64.zip | awk '{print toupper($1)}')
+          SHA256_ARM64=$(sha256sum jenv-windows-arm64.zip | awk '{print toupper($1)}')
+
+          echo "SHA256_X64=${SHA256_X64}" >> $GITHUB_OUTPUT
+          echo "SHA256_ARM64=${SHA256_ARM64}" >> $GITHUB_OUTPUT
+          echo "WIN_X64_URL=${WIN_X64_URL}" >> $GITHUB_OUTPUT
+          echo "WIN_ARM64_URL=${WIN_ARM64_URL}" >> $GITHUB_OUTPUT
+
+          echo "✅ SHA256 for x64: ${SHA256_X64}"
+          echo "✅ SHA256 for arm64: ${SHA256_ARM64}"
+
+      - name: Generate WinGet Manifests
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          RELEASE_DATE=$(date -u +%Y-%m-%d)
+
+          # 创建 manifests 目录
+          mkdir -p winget-manifests
+
+          # 创建 installer.yaml
+          cat > winget-manifests/whywhathow.jenv.installer.yaml <<EOF
+          # yaml-language-server: \$schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+          PackageIdentifier: whywhathow.jenv
+          PackageVersion: ${VERSION}
+          InstallerType: zip
+          ReleaseDate: ${RELEASE_DATE}
+          Installers:
+          - Architecture: x64
+            NestedInstallerType: portable
+            NestedInstallerFiles:
+            - RelativeFilePath: ./bin/jenv.exe
+              PortableCommandAlias: jenv
+            InstallerUrl: ${{ steps.download.outputs.WIN_X64_URL }}
+            InstallerSha256: ${{ steps.download.outputs.SHA256_X64 }}
+          - Architecture: arm64
+            NestedInstallerType: portable
+            NestedInstallerFiles:
+            - RelativeFilePath: ./bin/jenv.exe
+              PortableCommandAlias: jenv
+            InstallerUrl: ${{ steps.download.outputs.WIN_ARM64_URL }}
+            InstallerSha256: ${{ steps.download.outputs.SHA256_ARM64 }}
+          ManifestType: installer
+          ManifestVersion: 1.6.0
+          EOF
+
+          # 创建 locale.yaml
+          cat > winget-manifests/whywhathow.jenv.locale.en-US.yaml <<EOF
+          # yaml-language-server: \$schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+
+          PackageIdentifier: whywhathow.jenv
+          PackageVersion: ${VERSION}
+          PackageLocale: en-US
+          Publisher: WhyWhatHow
+          PublisherUrl: https://github.com/WhyWhatHow
+          PublisherSupportUrl: https://github.com/WhyWhatHow/jenv/issues
+          Author: WhyWhatHow
+          PackageName: jenv
+          PackageUrl: https://github.com/WhyWhatHow/jenv
+          License: Apache-2.0
+          LicenseUrl: https://github.com/WhyWhatHow/jenv/blob/main/LICENSE
+          Copyright: Copyright (c) 2025 WhyWhatHow
+          ShortDescription: Java Environment Manager - Effortlessly switch between multiple Java versions
+          Description: |
+            jenv is a lightweight and efficient Java environment manager that allows you to easily switch between different Java Development Kit (JDK) versions on your system. Whether you're a developer working on multiple projects with different Java requirements or simply need to test your application across various Java versions, jenv simplifies the process.
+
+            Key Features:
+            - Fast scanning: Automatically detect installed JDKs in 300ms
+            - Quick switching: Switch between Java versions instantly
+            - Cross-platform: Works on Windows, Linux, and macOS
+            - Portable: No installation required, just download and run
+            - User-friendly: Simple CLI commands for all operations
+          Moniker: jenv
+          Tags:
+          - java
+          - jdk
+          - version-manager
+          - development-tools
+          - cli
+          - portable
+          ReleaseNotesUrl: https://github.com/WhyWhatHow/jenv/releases/tag/v${VERSION}
+          ManifestType: defaultLocale
+          ManifestVersion: 1.6.0
+          EOF
+
+          # 创建 version.yaml
+          cat > winget-manifests/whywhathow.jenv.yaml <<EOF
+          # yaml-language-server: \$schema=https://aka.ms/winget-manifest.version.1.6.0.schema.json
+
+          PackageIdentifier: whywhathow.jenv
+          PackageVersion: ${VERSION}
+          DefaultLocale: en-US
+          ManifestType: version
+          ManifestVersion: 1.6.0
+          EOF
+
+          echo "✅ WinGet manifests generated successfully!"
+          echo ""
+          echo "Generated files:"
+          ls -lh winget-manifests/
+
+      - name: Upload Manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: winget-manifests-${{ steps.version.outputs.VERSION }}
+          path: winget-manifests/
+          retention-days: 30
+
+      - name: Summary
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## ✅ WinGet Manifests Generated
+
+          **Version:** ${VERSION}
+
+          ### Generated Files
+          - \`whywhathow.jenv.installer.yaml\`
+          - \`whywhathow.jenv.locale.en-US.yaml\`
+          - \`whywhathow.jenv.yaml\`
+
+          ### Checksums
+          - **x64**: \`${{ steps.download.outputs.SHA256_X64 }}\`
+          - **arm64**: \`${{ steps.download.outputs.SHA256_ARM64 }}\`
+
+          ### Next Steps
+          1. Download the artifacts from this workflow run
+          2. Fork the [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) repository
+          3. Create a new branch
+          4. Add the manifests to \`manifests/w/whywhathow/jenv/${VERSION}/\`
+          5. Create a Pull Request
+
+          ### Detailed Guide
+          See [WinGet Release Guide](https://github.com/WhyWhatHow/jenv/blob/main/docs/winget-release-guide.md) for detailed instructions.
+          EOF
