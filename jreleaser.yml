@@ -1,3 +1,4 @@
+# 1. Matrix 保持不变
 matrix:
   rows:
     - { goos: darwin,  goarch: arm64, platform: osx-aarch_64 }
@@ -9,15 +10,19 @@ matrix:
 
 project:
   name: jenv
-  #  version: 1.0.0  #local running
-  #  version: "{{ env.JRELEASER_PROJECT_VERSION | default('1.2.1') }}"  # 默认值语法
   description: Java Environment Manager
+  # 2. 新增 longDescription，Winget 强烈建议要有长描述
+  longDescription: |
+    jenv is a command line tool to manage Java versions on Windows.
+    It is a lightweight alternative written in Go, allowing easy switching between JDKs.
   copyright: Copyright (c) 2025 WhyWhatHow
   authors:
     - WhyWhatHow
   license: Apache-2.0
   links:
     homepage: https://github.com/WhyWhatHow/jenv
+    # 3. 建议补充 bugTracker，Winget 会用到
+    bugTracker: https://github.com/WhyWhatHow/jenv/issues
 
 release:
   github:
@@ -53,6 +58,21 @@ release:
         - search: 'fix: '
         - search: 'chore: '
 
+# 4. Hooks 保持不变，用于编译二进制文件
+# hooks:
+#   script:
+#     before:
+#       - run: |
+#           echo "building ${GOOS}-${GOARCH}-${VERSION}"
+#           cd src 
+#           go mod download
+#           go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/
+#         applyDefaultMatrix: true
+#         verbose: true
+#         environment:
+#           VERSION: "{{projectVersion}}"
+#           GOOS: "{{ matrix.goos }}"
+#           GOARCH: "{{ matrix.goarch }}"
 hooks:
   script:
     before:
@@ -60,7 +80,8 @@ hooks:
           echo "building ${GOOS}-${GOARCH}-${VERSION}"
           cd src 
           go mod download
-          go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/
+          # 👇 修改这里：明确加上 /jenv.exe
+          go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/jenv.exe
         applyDefaultMatrix: true
         verbose: true
         environment:
@@ -68,16 +89,22 @@ hooks:
           GOOS: "{{ matrix.goos }}"
           GOARCH: "{{ matrix.goarch }}"
 
+# 5. Assemble 保持不变 (生成的 ZIP 包结构是 bin/jenv.exe)
 assemble:
   archive:
     jenv:
       active: ALWAYS
       formats: [ ZIP ]
       applyDefaultMatrix: true
+      # 👇 这一行非常关键！
+      # 告诉 JReleaser：这个生成的 ZIP 包属于 matrix 定义的那个平台
+      # 如果不加这行，Winget 无法从一堆 ZIP 包里认出哪个是给 Windows 用的
+      # platform: "{{ matrix.platform }}" 
+      
       archiveName: "jenv-{{projectVersion}}-{{ matrix.platform }}"
       fileSets:
         - input: "dist/{{ matrix.goos }}-{{ matrix.goarch }}"
-          output: "bin"
+          output: "."
           includes: [ "jenv{.exe,}" ]
         - input: "."
           includes: [ "LICENSE","README.md" ]
@@ -85,4 +112,44 @@ assemble:
 distributions:
   jenv:
     executable:
+      name: jenv
       windowsExtension: exe
+
+# 7. 【新增】Winget 配置部
+packagers:
+  winget:
+    active: ALWAYS
+    continueOnError: true
+    # ⚠️ 调试阶段设为 true
+    skipPublishing: false
+    
+    # 对应 Winget ID: WhyWhatHow.jenv
+    package:
+      identifier: WhyWhatHow.jenv
+    
+    # 发布者信息
+    publisher:
+      name: WhyWhatHow
+
+    # 🟢 修正点 1: 这里必须是字符串
+    defaultLocale: "en-US"
+    
+    # 🟢 修正点 2: tags 必须放在这里 (winget 的直接子节点)
+    tags:
+      - java
+      - version-manager
+      - cli
+      - go
+    
+    # 微软官方仓库配置
+    repository:
+      active: ALWAYS
+      owner: microsoft
+      name: winget-pkgs
+      branch: HEAD
+      
+    installer:
+      # 告诉 Winget 这是一个 ZIP 包
+      type: ZIP
+      # 安装后在 PATH 中注册的命令
+      command: jenv

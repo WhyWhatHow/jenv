@@ -69,7 +69,7 @@ jobs:
           arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 修改变量名
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: JReleaser release output
         if: always()
@@ -80,3 +80,22 @@ jobs:
           path: |
             out/jreleaser/trace.log
             out/jreleaser/output.properties
+
+      - name: Jreleaser Package
+        uses: jreleaser/release-action@v2
+        with:
+          arguments: package
+        env:
+          JRELEASER_PROJECT_VERSION: ${{ env.VERSION }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
+      - name: JReleaser package output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          name: jreleaser-package
+          path: |
+            out/jreleaser/trace.log
+            out/jreleaser/output.properties
+            out/jreleaser/package/
