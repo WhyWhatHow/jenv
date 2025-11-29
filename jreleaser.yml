@@ -96,12 +96,8 @@ assemble:
       active: ALWAYS
       formats: [ ZIP ]
       applyDefaultMatrix: true
-      # 👇 这一行非常关键！
-      # 告诉 JReleaser：这个生成的 ZIP 包属于 matrix 定义的那个平台
-      # 如果不加这行，Winget 无法从一堆 ZIP 包里认出哪个是给 Windows 用的
-      platform: "{{ matrix.platform }}"
-
-      archiveName: "jenv-{{projectVersion}}-{{ matrix.platform }}"
+      attachPlatform: true
+      archiveName: "jenv-{{projectVersion}}-{{archivePlatform}}"
       fileSets:
         - input: "dist/{{ matrix.goos }}-{{ matrix.goarch }}"
           output: "bin"
