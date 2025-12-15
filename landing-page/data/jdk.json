@@ -1,31 +1,31 @@
 {
-  "lastUpdated": "2025-11-27T14:11:01.224Z",
+  "lastUpdated": "2025-12-15T01:28:13.017Z",
   "jenv": {
-    "version": "0.6.7",
+    "version": "0.6.9",
     "platforms": {
       "windows-x64": {
-        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-windows-x86_64.zip",
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.9/jenv-0.6.9-windows-x86_64.zip",
         "size": "3.9 MB",
         "sha256": ""
       },
       "linux-x64": {
-        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-linux-x86_64.zip",
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.9/jenv-0.6.9-linux-x86_64.zip",
         "size": "3.7 MB",
         "sha256": ""
       },
       "linux-arm64": {
-        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-linux-aarch_64.zip",
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.9/jenv-0.6.9-linux-aarch_64.zip",
         "size": "3.5 MB",
         "sha256": ""
       },
       "macos-x64": {
-        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-osx-x86_64.zip",
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.9/jenv-0.6.9-osx-x86_64.zip",
         "size": "3.6 MB",
         "sha256": ""
       },
       "macos-arm64": {
-        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.7/jenv-0.6.7-osx-aarch_64.zip",
-        "size": "3.4 MB",
+        "url": "https://github.com/WhyWhatHow/jenv/releases/download/v0.6.9/jenv-0.6.9-osx-aarch_64.zip",
+        "size": "3.5 MB",
         "sha256": ""
       }
     }
@@ -404,15 +404,15 @@
               "distribution": "zulu"
             },
             "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/e003c3a45fab103f887ec52df812d860/redirect",
-              "size": "217.0 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/b2153f3df60e10b9fb592039c8fa1061/redirect",
+              "size": "313.0 MB",
               "sha256": "",
               "javaVersion": "25.0.1+8",
               "distribution": "zulu"
             },
             "macos-arm64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/91b14ec7f8f8e1083087523f0d853b5c/redirect",
-              "size": "214.6 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/9bd55df3cf7caf7ee598ce63d37638f0/redirect",
+              "size": "304.7 MB",
               "sha256": "",
               "javaVersion": "25.0.1+8",
               "distribution": "zulu"
