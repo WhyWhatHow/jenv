@@ -44,8 +44,9 @@
       8
     ],
     "recommended": [
-      11,
-      17
+      17,
+      21,
+      25
     ],
     "distributions": {
       "temurin": {

@@ -32,7 +32,7 @@ function startTypingEffect() {
       if (charIndex === 0) {
         isDeleting = false;
         messageIndex = (messageIndex + 1) % messages.length;
-        setTimeout(type, 500); // Pause before typing next message
+        typingInterval = setTimeout(type, 500); // Pause before typing next message
         return;
       }
     } else {
@@ -42,13 +42,13 @@ function startTypingEffect() {
 
       if (charIndex === currentMessage.length) {
         isDeleting = true;
-        setTimeout(type, 2000); // Pause when message is complete
+        typingInterval = setTimeout(type, 2000); // Pause when message is complete
         return;
       }
     }
 
     const typingSpeed = isDeleting ? 50 : 100;
-    setTimeout(type, typingSpeed);
+    typingInterval = setTimeout(type, typingSpeed);
   }
 
   // Clear existing interval if any
@@ -442,10 +442,40 @@ source ~/.bashrc  # 或 ~/.zshrc
 java -version`
     },
     'macos': {
-      'en': `# macOS support coming soon
-# Stay tuned...`,
-      'zh': `# macOS 支持即将推出
-# 敬请期待...`
+      'en': `# 1. Extract jenv.zip
+tar -xzf jenv-*.zip
+
+# 2. Initialize (may need sudo)
+./jenv init
+
+# 3. Add JDK
+./jenv add jdk11 /path/to/jdk
+
+# 4. Switch version
+./jenv use jdk11
+
+# 5. Reload shell
+source ~/.zshrc # or ~/.bashrc
+
+# 6. Verify
+java -version`,
+      'zh': `# 1. 解压 jenv.zip
+tar -xzf jenv-*.zip
+
+# 2. 初始化 (可能需要 sudo)
+./jenv init
+
+# 3. 添加 JDK
+./jenv add jdk11 /path/to/jdk
+
+# 4. 切换版本
+./jenv use jdk11
+
+# 5. 重新加载 shell
+source ~/.zshrc # 或 ~/.bashrc
+
+# 6. 验证
+java -version`
     }
   };
 
@@ -492,7 +522,7 @@ function getFAQItems(lang) {
       },
       {
         question: 'Which OS are supported?',
-        answer: '<p>Currently:</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (various distros)</li><li>🚧 macOS (coming soon)</li></ul>'
+        answer: '<p>Currently:</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (various distros)</li><li>✅ macOS (Apple Silicon & Intel)</li></ul>'
       }
     ],
     'zh': [
@@ -510,7 +540,7 @@ function getFAQItems(lang) {
       },
       {
         question: '支持哪些操作系统?',
-        answer: '<p>目前支持:</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (多发行版)</li><li>🚧 macOS (即将支持)</li></ul>'
+        answer: '<p>目前支持:</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (多发行版)</li><li>✅ macOS (Apple Silicon & Intel)</li></ul>'
       }
     ]
   };

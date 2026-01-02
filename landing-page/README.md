@@ -4,7 +4,7 @@ A modern, responsive landing page for JEnv - the fast and easy Java version mana
 
 ## Features
 
-- 🎯 **Platform Detection**: Automatically detects user's OS and architecture (Windows, Linux, macOS with x64/arm64)
+- 🎯 **Platform Detection**: Automatically detects user's OS and architecture (Windows, Linux, macOS with x64/arm64 support)
 - 📦 **One-Click Downloads**: Direct download links for JEnv and JDK distributions
 - 🌍 **Internationalization**: Supports English and Chinese with automatic language detection
 - 🎨 **Modern UI**: Dark theme with smooth animations and responsive design

@@ -37,7 +37,7 @@
 
   /* Font */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", "Consolas", "Monaco", monospace;
+  --font-mono: "JetBrains Mono", "Sarasa Gothic SC", "Consolas", "Monaco", monospace;
 
   /* Transitions */
   --transition: 0.2s ease;
