@@ -7,13 +7,14 @@ from datetime import datetime, timezone
 PLATFORMS = ['windows-x64', 'linux-x64', 'linux-arm64', 'macos-x64', 'macos-arm64', 'windows-arm64']
 DISTRIBUTIONS = [
     {'id': 'temurin', 'name': 'Eclipse Temurin', 'desc': 'Most popular open-source JDK', 'recommended': True},
-    {'id': 'zulu', 'name': 'Azul Zulu', 'desc': 'Enterprise-ready OpenJDK'},
+    {'id': 'zulu', 'name': 'Azul Zulu', 'desc': 'Enterprise-ready OpenJDK', 'recommended': True},
+    {'id': 'graalvm', 'name': 'GraalVM', 'desc': 'High-performance JDK', 'recommended': True},
+    {'id': 'dragonwell', 'name': 'Alibaba Dragonwell', 'desc': 'Alibaba\'s OpenJDK', 'recommended': True},
+    {'id': 'oracle_open_jdk', 'name': 'Oracle OpenJDK', 'desc': 'Official OpenJDK builds', 'recommended': True},
     {'id': 'corretto', 'name': 'Amazon Corretto', 'desc': 'Production-ready OpenJDK'},
     {'id': 'liberica', 'name': 'BellSoft Liberica', 'desc': 'Flexible OpenJDK builds' },
     {'id': 'microsoft', 'name': 'Microsoft Build of OpenJDK', 'desc': 'Microsoft\'s OpenJDK' },
-    {'id': 'oracle_open_jdk', 'name': 'Oracle OpenJDK', 'desc': 'Official OpenJDK builds' },
-    {'id': 'sapmachine', 'name': 'SapMachine', 'desc': 'SAP\'s OpenJDK' },
-    {'id': 'dragonwell', 'name': 'Alibaba Dragonwell', 'desc': 'Alibaba\'s OpenJDK' }
+    {'id': 'sapmachine', 'name': 'SapMachine', 'desc': 'SAP\'s OpenJDK' }
 ]
 PLATFORM_MAP = {
     'windows-x64': {'foojay': {'os': 'windows', 'arch': 'x64'}, 'jenv': 'windows-x86_64'},
@@ -40,7 +41,12 @@ def fetch_with_retry(url, headers=None, retries=3):
 def fetch_jenv_releases():
     print('Fetching JEnv releases...')
     url = 'https://api.github.com/repos/WhyWhatHow/jenv/releases/latest'
-    data = fetch_with_retry(url, headers={'User-Agent': 'jenv-landing-fetcher'})
+    headers = {'User-Agent': 'jenv-landing-fetcher'}
+    github_token = os.getenv('GITHUB_TOKEN')
+    if github_token:
+        print("Found GITHUB_TOKEN, using it for authentication.")
+        headers['Authorization'] = f'Bearer {github_token}'
+    data = fetch_with_retry(url, headers=headers)
     version = data['tag_name'].replace('v', '')
     platforms = {}
     for platform in PLATFORMS:
@@ -146,7 +152,7 @@ def main():
             'jenv': jenv,
             'jdk': {
                 'versions': jdk_versions,
-                'recommended': [11, 17],
+                'recommended': [17, 21, 25],
                 'distributions': distributions_data
             }
         }
