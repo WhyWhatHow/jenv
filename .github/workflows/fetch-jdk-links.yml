@@ -2,9 +2,9 @@ name: Fetch JDK Links
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # Every Monday at 00:00 UTC (8:00 AM Beijing)
-    - cron: '0 0 * * 4'  # Every Thursday at 00:00 UTC (8:00 AM Beijing)
-  workflow_dispatch:        # Allow manual trigger
+    - cron: '0 0 * * 1' # Every Monday at 00:00 UTC (8:00 AM Beijing)
+    - cron: '0 0 * * 4' # Every Thursday at 00:00 UTC (8:00 AM Beijing)
+  workflow_dispatch: # Allow manual trigger
   push:
     paths:
       - 'landing-page/scripts/**'
@@ -20,15 +20,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
 
       - name: Fetch JDK links
-        run: |
-          cd landing-page
-          node scripts/fetch-jdk-links.js
+        run: python landing-page/scripts/fetch_jdks.py
 
       - name: Check for changes
         id: git-check
