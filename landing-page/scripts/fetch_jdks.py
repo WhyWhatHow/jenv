@@ -41,7 +41,12 @@ def fetch_with_retry(url, headers=None, retries=3):
 def fetch_jenv_releases():
     print('Fetching JEnv releases...')
     url = 'https://api.github.com/repos/WhyWhatHow/jenv/releases/latest'
-    data = fetch_with_retry(url, headers={'User-Agent': 'jenv-landing-fetcher'})
+    headers = {'User-Agent': 'jenv-landing-fetcher'}
+    github_token = os.getenv('GITHUB_TOKEN')
+    if github_token:
+        print("Found GITHUB_TOKEN, using it for authentication.")
+        headers['Authorization'] = f'Bearer {github_token}'
+    data = fetch_with_retry(url, headers=headers)
     version = data['tag_name'].replace('v', '')
     platforms = {}
     for platform in PLATFORMS:
