@@ -36,6 +36,68 @@
 `Jenv` is a command-line tool for managing multiple Java versions on your system. It allows you to easily switch between
 different Java versions, add new Java installations, and manage your Java environment.
 
+## Installation
+
+### Windows
+
+#### Winget (Recommended)
+```bash
+winget install WhyWhatHow.jenv
+```
+
+#### Scoop
+```bash
+scoop install jenv
+```
+
+### macOS & Linux
+
+#### Install Script (Recommended)
+```bash
+curl -sSL https://raw.githubusercontent.com/WhyWhatHow/jenv/main/install.sh | bash
+```
+After installation, restart your shell or run `source ~/.bashrc` or `source ~/.zshrc` to apply the changes.
+
+### Manual Installation
+
+#### From Release
+Download the latest release from the [Releases page](https://github.com/WhyWhatHow/jenv/releases).
+
+#### Build from Source
+<details>
+<summary>Click to expand</summary>
+
+##### Prerequisites
+
+- Go 1.21 or higher
+- Git
+- **Windows**: Administrator privileges required for system symbolic links
+- **Linux**: Root privileges recommended for system-wide installation (optional)
+
+##### Build Steps
+
+1. Clone the repository:
+```bash
+git clone https://github.com/WhyWhatHow/jenv.git
+cd jenv
+```
+
+2. Build the project:
+
+```bash
+cd src
+
+# For Windows (PowerShell)
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv.exe
+
+# For Linux/macOS
+go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv
+
+# For development build (with debug information)
+go build -o jenv
+```
+</details>
+
 ## Features
 
 ### Efficient Java Version Management
@@ -107,43 +169,6 @@ different Java versions, add new Java installations, and manage your Java enviro
 ├── doc/                # Documentation
 └── .github/            # GitHub configurations
     └── workflows/      # CI/CD workflows
-```
-
-## Installation
-
-### From Release
-Download the latest release from the [Releases page](https://github.com/WhyWhatHow/jenv/releases).
-
-### Build from Source
-
-#### Prerequisites
-
-- Go 1.21 or higher
-- Git
-- **Windows**: Administrator privileges required for system symbolic links
-- **Linux**: Root privileges recommended for system-wide installation (optional)
-
-#### Build Steps
-
-1. Clone the repository:
-```bash
-git clone https://github.com/WhyWhatHow/jenv.git
-cd jenv
-```
-
-2. Build the project:
-
-```bash
-cd src
-
-# For Windows (PowerShell)
-go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv.exe
-
-# For Linux/macOS
-go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=1.0.0" -o jenv
-
-# For development build (with debug information)
-go build -o jenv
 ```
 
 ## Usage
@@ -315,12 +340,37 @@ Inspired by nvm-windows, JEnv uses symlinks for Java version management across a
     - Permission requests only occur during initialization and version switching
 
 5. **Multi-Shell Support (Linux)**
-    - Automatically detects and configures bash, zsh, fish shells
+    - Automatically detects and infigures bash, zsh, fish shells
     - Updates appropriate configuration files (.bashrc, .zshrc, config.fish)
     - Ensures environment variables persist across shell sessions
 
 This approach is more efficient than constantly modifying system PATH variables, providing a cleaner and more reliable
 solution for Java version management across all supported platforms.
+
+## For Maintainers: Automated Publishing
+
+This repository uses `jreleaser` to automate publishing to Winget and Scoop. For this to work, a Personal Access Token (PAT) must be configured in the repository secrets.
+
+### How to set up the `GH_PAT` secret:
+
+1.  **Generate a new PAT:**
+    *   Go to your [GitHub Developer Settings](https://github.com/settings/tokens).
+    *   Click on "Generate new token" (classic).
+    *   Give the token a descriptive name (e.g., `jenv-release-bot`).
+    *   Set the expiration date.
+    *   Under "Scopes", select the `public_repo` permission. This will grant the token the ability to create pull requests on public repositories.
+    *   Click "Generate token" and copy the token value.
+
+2.  **Add the token to repository secrets:**
+    *   Go to your repository's `Settings` tab.
+    *   In the left sidebar, click on `Secrets and variables` > `Actions`.
+    *   Click on the `New repository secret` button.
+    *   Name the secret `GH_PAT`.
+    *   Paste the token value into the "Value" field.
+    *   Click `Add secret`.
+
+Once the `GH_PAT` is configured, the GitHub Actions workflow will automatically create pull requests to the Winget and Scoop repositories whenever a new release is published.
+
 
 ## Acknowledgments
 
@@ -333,4 +383,3 @@ solution for Java version management across all supported platforms.
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
