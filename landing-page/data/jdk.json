@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-05T01:46:32.184548+00:00",
+  "lastUpdated": "2026-01-12T01:43:38.698008+00:00",
   "jenv": {
     "version": "0.6.9",
     "platforms": {
@@ -1496,6 +1496,13 @@
             }
           },
           "21": {
+            "windows-x64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/b6faf2937ee26192f653f4eb2f3f30a2/redirect",
+              "size": "203.4 MB",
+              "sha256": "",
+              "javaVersion": "21.0.9",
+              "distribution": "sap_machine"
+            },
             "linux-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/6511fc6a7f97e5035a7d16c8208d8e87/redirect",
               "size": "199.4 MB",
@@ -1550,6 +1557,13 @@
             "macos-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/ec7de2acd9072a73a98bb2d413976485/redirect",
               "size": "179.9 MB",
+              "sha256": "",
+              "javaVersion": "17.0.17",
+              "distribution": "sap_machine"
+            },
+            "macos-arm64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/62f04fe087e320d6c23cb932e284bd38/redirect",
+              "size": "177.9 MB",
               "sha256": "",
               "javaVersion": "17.0.17",
               "distribution": "sap_machine"
