@@ -59,20 +59,6 @@ release:
         - search: 'chore: '
 
 # 4. Hooks 保持不变，用于编译二进制文件
-# hooks:
-#   script:
-#     before:
-#       - run: |
-#           echo "building ${GOOS}-${GOARCH}-${VERSION}"
-#           cd src 
-#           go mod download
-#           go build -ldflags "-X github.com/whywhathow/jenv/cmd.Version=${VERSION}" -o ../dist/${GOOS}-${GOARCH}/
-#         applyDefaultMatrix: true
-#         verbose: true
-#         environment:
-#           VERSION: "{{projectVersion}}"
-#           GOOS: "{{ matrix.goos }}"
-#           GOARCH: "{{ matrix.goarch }}"
 hooks:
   script:
     before:
@@ -150,3 +136,11 @@ packagers:
       type: ZIP
       # 安装后在 PATH 中注册的命令
       command: jenv
+  scoop:
+    active: ALWAYS
+    continueOnError: true
+    skipPublishing: false
+    repository:
+      owner: ScoopInstaller
+      name: Main
+      branch: master
