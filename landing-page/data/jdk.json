@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-15T01:20:40.446105+00:00",
+  "lastUpdated": "2026-01-19T01:44:21.764269+00:00",
   "jenv": {
     "version": "0.6.9",
     "platforms": {
@@ -1063,13 +1063,6 @@
         "recommended": false,
         "versions": {
           "25": {
-            "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/b51fcf46dd63b26de7249ddc3180dcc8/redirect",
-              "size": "78.8 MB",
-              "sha256": "",
-              "javaVersion": "25.0.1+13",
-              "distribution": "liberica"
-            },
             "linux-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/d5dbbb661c4db4a7f5499a9b3db7f2aa/redirect",
               "size": "247.9 MB",
@@ -1080,13 +1073,6 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/831a344fe7117e3fa59b6b6b83ccd16d/redirect",
               "size": "244.5 MB",
-              "sha256": "",
-              "javaVersion": "25.0.1+13",
-              "distribution": "liberica"
-            },
-            "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/916643921c519bf449317cfc02ac937a/redirect",
-              "size": "78.1 MB",
               "sha256": "",
               "javaVersion": "25.0.1+13",
               "distribution": "liberica"
@@ -1107,13 +1093,6 @@
             }
           },
           "21": {
-            "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/00ed7e223d52392be368b57241dbb09c/redirect",
-              "size": "74.2 MB",
-              "sha256": "",
-              "javaVersion": "21.0.9+15",
-              "distribution": "liberica"
-            },
             "linux-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/5977349a2b2077729aef0eaff9482dd3/redirect",
               "size": "220.2 MB",
@@ -1124,13 +1103,6 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/f241d1bee4a60848445361cb094e09b4/redirect",
               "size": "73.7 MB",
-              "sha256": "",
-              "javaVersion": "21.0.9+15",
-              "distribution": "liberica"
-            },
-            "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/2b5a914fd54334bb2d3b86e74cf685c8/redirect",
-              "size": "208.4 MB",
               "sha256": "",
               "javaVersion": "21.0.9+15",
               "distribution": "liberica"
@@ -1151,13 +1123,6 @@
             }
           },
           "17": {
-            "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/a8f5f00a733693d29c21a02bfa10a8b9/redirect",
-              "size": "68.5 MB",
-              "sha256": "",
-              "javaVersion": "17.0.17+15",
-              "distribution": "liberica"
-            },
             "linux-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/a0cbd3bc38a4186e27407476bd821425/redirect",
               "size": "68.6 MB",
@@ -1168,13 +1133,6 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/682a14a8a6b33c0be3ea0a2af30fb2e5/redirect",
               "size": "68.0 MB",
-              "sha256": "",
-              "javaVersion": "17.0.17+15",
-              "distribution": "liberica"
-            },
-            "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/2fcbaa5f62d4a20929f85083fbbf752c/redirect",
-              "size": "193.4 MB",
               "sha256": "",
               "javaVersion": "17.0.17+15",
               "distribution": "liberica"
@@ -1195,16 +1153,9 @@
             }
           },
           "11": {
-            "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/1d2c64aa8ddf7a50ad2beecb365b5251/redirect",
-              "size": "70.6 MB",
-              "sha256": "",
-              "javaVersion": "11.0.29+12",
-              "distribution": "liberica"
-            },
             "linux-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/10831de4965696f023e5df3f90174822/redirect",
-              "size": "71.3 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/e0755e9f24c68070a8fd1e23a31edf7f/redirect",
+              "size": "71.2 MB",
               "sha256": "",
               "javaVersion": "11.0.29+12",
               "distribution": "liberica"
@@ -1212,13 +1163,6 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/0e2ee4220962030fd473815392f0f4fb/redirect",
               "size": "70.8 MB",
-              "sha256": "",
-              "javaVersion": "11.0.29+12",
-              "distribution": "liberica"
-            },
-            "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/9e46a9bdde1385fc224c3f43a5493c9d/redirect",
-              "size": "69.3 MB",
               "sha256": "",
               "javaVersion": "11.0.29+12",
               "distribution": "liberica"
@@ -1239,16 +1183,9 @@
             }
           },
           "8": {
-            "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/3ff6dd4ee31ebb68b1665a53b8e8d54f/redirect",
-              "size": "51.3 MB",
-              "sha256": "",
-              "javaVersion": "8.0.472+11",
-              "distribution": "liberica"
-            },
             "linux-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/12288f92140c2de2ae46210d48bfe4f3/redirect",
-              "size": "101.9 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/2c3da624de3709ba58f512c2f02dff26/redirect",
+              "size": "100.3 MB",
               "sha256": "",
               "javaVersion": "8.0.472+11",
               "distribution": "liberica"
@@ -1256,13 +1193,6 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/3ba7b2a99de8e8052a5ff50765c59720/redirect",
               "size": "99.9 MB",
-              "sha256": "",
-              "javaVersion": "8.0.472+11",
-              "distribution": "liberica"
-            },
-            "macos-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/b744a1a6c4cadbbaad12a286e0514ed7/redirect",
-              "size": "51.0 MB",
               "sha256": "",
               "javaVersion": "8.0.472+11",
               "distribution": "liberica"
