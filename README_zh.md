@@ -5,7 +5,7 @@
 
 ![GitHub release](https://img.shields.io/github/v/release/WhyWhatHow/jenv)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
-![Version](https://img.shields.io/badge/version-v0.6.7-blue)
+![Version](https://img.shields.io/badge/version-v0.6.9-blue)
 
 [English](README.md) | 中文 | [日本語](README_jp.md)
 
@@ -13,10 +13,10 @@
 
 </div>
 
-## 最新更新 (v0.6.7)
+## 最新更新 (v0.6.9)
 
 ### 🚀 性能提升
-- **超快 JDK 扫描**：扫描时间从 3 秒缩短至 300ms（提升 90%）。[阅读更多技术细节](doc/PERFORMANCE.md)
+- **超快 JDK 扫描**：扫描时间从 3 秒缩短至 300ms（提升 90%）。[阅读更多技术细节](doc/PERFORMANCE_zh.md)
 - **并发处理**：使用 goroutines 实现了 Dispatcher-Worker 模型
 - **智能过滤**：积极的预过滤，跳过不必要的目录
 - **进度追踪**：实时扫描进度和详细统计数据

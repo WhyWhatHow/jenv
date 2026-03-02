@@ -5,7 +5,7 @@
 
 ![GitHub release](https://img.shields.io/github/v/release/WhyWhatHow/jenv)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
-![Version](https://img.shields.io/badge/version-v0.6.7-blue)
+![Version](https://img.shields.io/badge/version-v0.6.9-blue)
 
 English | [中文](README_zh.md) | [日本語](README_jp.md)
 
@@ -13,7 +13,7 @@ English | [中文](README_zh.md) | [日本語](README_jp.md)
 
 </div>
 
-## Recent Updates (v0.6.7)
+## Recent Updates (v0.6.9)
 
 ### 🚀 Performance Improvements
 - **Ultra-fast JDK scanning**: Reduced scanning time from 3 seconds to 300ms (90% improvement). [Read more about how we did it.](doc/PERFORMANCE.md)
