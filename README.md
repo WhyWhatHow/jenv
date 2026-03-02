@@ -5,24 +5,26 @@
 
 ![GitHub release](https://img.shields.io/github/v/release/WhyWhatHow/jenv)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WhyWhatHow/jenv/release.yml?branch=main)
-![Version](https://img.shields.io/badge/version-v0.6.7-blue)
+![Version](https://img.shields.io/badge/version-v0.6.9-blue)
 
-**🚀 [Quick Start with Landing Page](https://jenv-win.vercel.app)** - One-click downloads with automatic platform detection (Windows/Linux/macOS) • Multi-language support (EN/中文) • Updated bi-weekly
+English | [中文](README_zh.md) | [日本語](README_jp.md)
+
+**🚀 [Quick Start with Landing Page](https://jenv-win.vercel.app)** - One-click downloads with automatic platform detection (Windows/Linux/macOS) • Multi-language support (EN/中文/日本語) • Updated bi-weekly
 
 </div>
 
-## Recent Updates (v0.6.7)
+## Recent Updates (v0.6.9)
 
 ### 🚀 Performance Improvements
-- **Ultra-fast JDK scanning**: Reduced scanning time from 3 seconds to 300ms (90% improvement)
+- **Ultra-fast JDK scanning**: Reduced scanning time from 3 seconds to 300ms (90% improvement). [Read more about how we did it.](doc/PERFORMANCE.md)
 - **Concurrent processing**: Implemented Dispatcher-Worker model with goroutines
 - **Smart filtering**: Aggressive pre-filtering to skip unnecessary directories
 - **Progress tracking**: Real-time scanning progress and detailed statistics
 
 ### ✅ Cross-Platform Support
+- **macOS support completed**: Full macOS compatibility (Intel/Apple Silicon)
 - **Linux support completed**: Full Linux compatibility with multi-shell support
 - **Windows optimization**: Enhanced path validation and compatibility fixes
-- **macOS preparation**: Infrastructure ready for macOS support (coming soon)
 
 ### 🔧 Technical Enhancements
 - **Java path validation**: Improved Windows JDK detection reliability
@@ -83,7 +85,7 @@ different Java versions, add new Java installations, and manage your Java enviro
 - **Cross-Platform Support**
     - Windows support (✅ Complete)
     - Linux support (✅ Complete)
-    - macOS support (🚧 In Progress)
+    - macOS support (✅ Complete)
 ## Project Structure
 
 ```
@@ -266,17 +268,15 @@ Without root privileges, jenv will automatically use user-level configuration in
 
 ### Why was this project created?
 
-While Linux and macOS users have mature tools like `sdkman` and `jenv` for Java version management, Windows users have
-limited options. The existing [Jenv-forWindows](https://github.com/FelixSelter/JEnv-for-Windows) solution, while
-functional, faces performance issues on Windows 10 systems.
+While Linux and macOS users have mature tools like `sdkman` and the original `jenv` (bash-based) for Java version management, Windows users have historically had limited, often sub-optimal options. Existing solutions like [JEnv-for-Windows](https://github.com/FelixSelter/JEnv-for-Windows) can face significant performance bottlenecks on modern Windows systems.
 
-This project was born out of two motivations:
+This project was born out of two key motivations:
 
-1. To create a fast, efficient Java version manager specifically optimized for Windows
-2. To explore AI-assisted development using tools like `cursor` and `Trae` while learning Go programming from scratch
+1.  **Bridging the Windows Gap**: To provide Windows developers with a robust, high-performance Java version manager that matches (or exceeds) the experience found on Unix-like systems.
+2.  **Performance First**: Achieving near-instant JDK scanning and switching, regardless of system size or complexity.
+3.  **Modern Engineering**: Exploring AI-assisted development (using `Cursor` and `Trae`) to build a modern, cross-platform tool in Go from the ground up.
 
-The goal is to provide Windows developers with a robust, performant solution for managing multiple Java environments,
-similar to what Linux and macOS users already enjoy.
+Our goal is to be the **de facto Java environment manager for Windows**, while providing a seamless, unified experience for developers who work across Windows, Linux, and macOS.
 
 ### How it works?
 

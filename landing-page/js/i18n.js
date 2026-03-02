@@ -147,6 +147,79 @@ const translations = {
     // Mobile
     mobileTitle: '请使用桌面浏览器访问',
     mobileMessage: '为了获得最佳体验，请在桌面电脑上打开此页面'
+  },
+
+  jp: {
+    // Meta
+    title: 'JEnv - Java バージョン管理ツール',
+    description: '高速で簡単な Java バージョン管理ツール',
+
+    // Hero
+    detected: '検出',
+    tagline: '3ステップでJDKをインストール、手動のパス設定は不要',
+
+    // Typing effect messages
+    typingMessages: [
+      '300ms で JDK バージョンを切り替え',
+      '手動の環境変数設定は不要',
+      'Windows、macOS、Linux で動作'
+    ],
+
+    // Quick Start
+    quickStart: '🚀 クイックスタート',
+    downloadJenv: 'JEnv をダウンロード',
+    downloadJdk: 'JDK をダウンロード',
+    install: 'インストールと使用',
+    version: 'バージョン',
+    downloading: '読み込み中...',
+    download: 'ダウンロード',
+    notAvailable: 'お使いのプラットフォームでは利用できません',
+
+    // JDK Selection
+    selectDistribution: 'ディストリビューションを選択',
+    selectDistributions: 'ディストリビューションを選択',
+    selectVersion: 'バージョン',
+    selectVersions: 'バージョンを選択',
+    yourPlatform: 'プラットフォーム',
+    autoDetected: '自動検出',
+    jdkHint: '💡 迷っていますか？JDK 11 はほとんどの初心者に最適です',
+    distHint: '💡 1つ以上の JDK ディストリビューションを選択してください',
+    versionHint: '💡 推奨: JDK 11 または 17',
+    selected: '選択済み',
+    packages: 'パッケージ',
+    downloadSelected: '選択したものをダウンロード',
+
+    // Features
+    whyJenv: 'なぜ JEnv なのか？',
+    feature1Title: '高速切り替え',
+    feature1Desc: 'シンボリックリンクベースで、300ms で JDK を切り替え',
+    feature2Title: 'Windows 最適化',
+    feature2Desc: 'Windows 10/11 に最適化、権限を自動処理',
+    feature3Title: 'モダンな体験',
+    feature3Desc: 'カラフルな CLI、ライト/ダークテーマをサポート',
+
+    // FAQ
+    faqTitle: 'よくある質問',
+
+    // Footer
+    footerText: 'JEnv - Java バージョン管理を簡単に',
+    license: 'ライセンス',
+    lastUpdated: '最終更新日',
+
+    // Actions
+    copy: 'コピー',
+    copied: 'クリップボードにコピーされました',
+    copyFailed: 'コピーに失敗しました。手動でコピーしてください',
+    downloadStarted: 'ダウンロードを開始しました...',
+
+    // Errors
+    loading: '読み込み中...',
+    errorLoading: 'データの読み込みに失敗しました。ページを更新してください',
+    initError: '初期化に失敗しました。ページを更新してください',
+
+    // Mobile
+    mobileTitle: 'デスクトップブラウザを使用してください',
+    mobileMessage: '最適な体験のために、デスクトップコンピュータでこのページを開いてください'
   }
 };
 
@@ -162,7 +235,9 @@ function t(key, lang = 'en') {
  */
 function getLanguage() {
   const browserLang = navigator.language || navigator.userLanguage;
-  return browserLang.toLowerCase().includes('zh') ? 'zh' : 'en';
+  if (browserLang.toLowerCase().includes('zh')) return 'zh';
+  if (browserLang.toLowerCase().includes('ja')) return 'jp';
+  return 'en';
 }
 
 // Export for use in other scripts

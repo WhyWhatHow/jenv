@@ -124,6 +124,14 @@ function getPlatformName(platform, lang) {
       'linux-arm64': 'Linux ARM',
       'macos-x64': 'macOS (Intel)',
       'macos-arm64': 'macOS (Apple Silicon)'
+    },
+    'jp': {
+      'windows-x64': 'Windows (x64)',
+      'windows-arm64': 'Windows ARM',
+      'linux-x64': 'Linux (x64)',
+      'linux-arm64': 'Linux ARM',
+      'macos-x64': 'macOS (Intel)',
+      'macos-arm64': 'macOS (Apple Silicon)'
     }
   };
   const key = getPlatformKey(platform);
@@ -403,6 +411,19 @@ jenv add jdk11 "C:\\path\\to\\jdk"
 jenv use jdk11
 
 # 5. 验证安装
+java -version`,
+      'jp': `# 1. jenv.zip を任意のディレクトリに展開します
+# 2. 管理者として PowerShell/CMD を実行します
+
+jenv init
+
+# 3. ダウンロードした JDK を追加します (実際のパスに変更してください)
+jenv add jdk11 "C:\\path\\to\\jdk"
+
+# 4. JDK 11 に切り替えます
+jenv use jdk11
+
+# 5. インストールを確認します
 java -version`
     },
     'linux': {
@@ -439,6 +460,23 @@ tar -xzf jenv-*.zip
 source ~/.bashrc  # 或 ~/.zshrc
 
 # 6. 验证
+java -version`,
+      'jp': `# 1. jenv.zip を展開します
+tar -xzf jenv-*.zip
+
+# 2. 初期化します (sudo が必要な場合があります)
+./jenv init
+
+# 3. JDK を追加します
+./jenv add jdk11 /path/to/jdk
+
+# 4. バージョンを切り替えます
+./jenv use jdk11
+
+# 5. シェルを再読み込みします
+source ~/.bashrc  # または ~/.zshrc
+
+# 6. 確認します
 java -version`
     },
     'macos': {
@@ -475,6 +513,23 @@ tar -xzf jenv-*.zip
 source ~/.zshrc # 或 ~/.bashrc
 
 # 6. 验证
+java -version`,
+      'jp': `# 1. jenv.zip を展開します
+tar -xzf jenv-*.zip
+
+# 2. 初期化します (sudo が必要な場合があります)
+./jenv init
+
+# 3. JDK を追加します
+./jenv add jdk11 /path/to/jdk
+
+# 4. バージョンを切り替えます
+./jenv use jdk11
+
+# 5. シェルを再読み込みします
+source ~/.zshrc # または ~/.bashrc
+
+# 6. 確認します
 java -version`
     }
   };
@@ -541,6 +596,24 @@ function getFAQItems(lang) {
       {
         question: '支持哪些操作系统?',
         answer: '<p>目前支持:</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (多发行版)</li><li>✅ macOS (Apple Silicon & Intel)</li></ul>'
+      }
+    ],
+    'jp': [
+      {
+        question: 'JDK とは何ですか？必要ですか？',
+        answer: '<p>JDK (Java Development Kit) は、Java 用のソフトウェア開発キットです。Java プログラムを作成して実行するために必要です。</p>'
+      },
+      {
+        question: 'どの JDK バージョンを選べばよいですか？',
+        answer: '<ul><li><strong>JDK 8</strong>: レガシープロジェクト</li><li><strong>JDK 11</strong>: 初心者に推奨 ⭐</li><li><strong>JDK 17</strong>: モダンな機能</li><li><strong>JDK 21</strong>: 最新の LTS</li></ul>'
+      },
+      {
+        question: 'なぜ JEnv が必要なのですか？',
+        answer: '<p>以下のことが必要な場合：</p><ul><li>複数の Java バージョンを保持する</li><li>異なるプロジェクトで JDK を素早く切り替える</li><li>手動の環境変数設定を避ける</li></ul><p>JEnv を使えば非常に簡単になります。</p>'
+      },
+      {
+        question: 'どの OS がサポートされていますか？',
+        answer: '<p>現在：</p><ul><li>✅ Windows 10/11</li><li>✅ Linux (各種ディストリビューション)</li><li>✅ macOS (Apple Silicon & Intel)</li></ul>'
       }
     ]
   };
@@ -629,8 +702,19 @@ function setupEventListeners() {
  * Toggle language
  */
 function toggleLanguage() {
-  currentLang = currentLang === 'en' ? 'zh' : 'en';
-  document.getElementById('lang-toggle').textContent = currentLang === 'en' ? '中文' : 'EN';
+  if (currentLang === 'en') {
+    currentLang = 'zh';
+  } else if (currentLang === 'zh') {
+    currentLang = 'jp';
+  } else {
+    currentLang = 'en';
+  }
+
+  const langBtn = document.getElementById('lang-toggle');
+  if (currentLang === 'en') langBtn.textContent = '中文';
+  else if (currentLang === 'zh') langBtn.textContent = '日本語';
+  else if (currentLang === 'jp') langBtn.textContent = 'EN';
+
   document.documentElement.lang = currentLang;
 
   // Re-translate page
@@ -674,6 +758,11 @@ async function init() {
     // Detect language
     currentLang = getLanguage();
     document.documentElement.lang = currentLang;
+
+    const langBtn = document.getElementById('lang-toggle');
+    if (currentLang === 'en') langBtn.textContent = '中文';
+    else if (currentLang === 'zh') langBtn.textContent = '日本語';
+    else if (currentLang === 'jp') langBtn.textContent = 'EN';
 
     // Load data
     appData = await loadData();
