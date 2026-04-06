@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-02T01:59:01.794472+00:00",
+  "lastUpdated": "2026-04-06T02:24:53.628712+00:00",
   "jenv": {
     "version": "0.6.9",
     "platforms": {
@@ -66,6 +66,13 @@
             "linux-arm64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/39e8ce74cee3e629d6fade20d237fff5/redirect",
               "size": "136.5 MB",
+              "sha256": "",
+              "javaVersion": "26+35",
+              "distribution": "temurin"
+            },
+            "macos-x64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/ef59bf670a5688da71dc8f2e9d1f8b76/redirect",
+              "size": "117.4 MB",
               "sha256": "",
               "javaVersion": "26+35",
               "distribution": "temurin"
