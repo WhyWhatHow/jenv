@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-11T02:56:19.425686+00:00",
+  "lastUpdated": "2026-05-14T02:46:05.010189+00:00",
   "jenv": {
     "version": "0.6.9",
     "platforms": {
@@ -249,10 +249,10 @@
           },
           "8": {
             "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/39e136653d494f36c808d894055449d0/redirect",
+              "url": "https://api.foojay.io/disco/v3.0/ids/9328c4de08e7fa4453c569e7de0e639d/redirect",
               "size": "101.5 MB",
               "sha256": "",
-              "javaVersion": "8.0.482+8",
+              "javaVersion": "8.0.492+9",
               "distribution": "temurin"
             },
             "linux-x64": {
