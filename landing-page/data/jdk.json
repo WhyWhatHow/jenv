@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-21T03:18:12.152511+00:00",
+  "lastUpdated": "2026-09-24T02:52:56.296150+00:00",
   "jenv": {
     "version": "0.6.9",
     "platforms": {
@@ -55,6 +55,22 @@
         "description": "Most popular open-source JDK",
         "recommended": true,
         "versions": {
+          "27": {
+            "linux-x64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/2202ecdf415d3c7e5714aa4b395fce44/redirect",
+              "size": "135.4 MB",
+              "sha256": "",
+              "javaVersion": "27+35",
+              "distribution": "temurin"
+            },
+            "linux-arm64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/b79772f12406428e4bf9705982fc81ca/redirect",
+              "size": "134.2 MB",
+              "sha256": "",
+              "javaVersion": "27+35",
+              "distribution": "temurin"
+            }
+          },
           "25": {
             "windows-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/aa99913fa6d767d899ffc96082da01ca/redirect",
@@ -499,24 +515,24 @@
         "versions": {
           "25": {
             "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/16d8182feac39874361597bf54e62900/redirect",
-              "size": "350.3 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/dbd14e8a7ebbccb031b1319ad9884473/redirect",
+              "size": "370.8 MB",
               "sha256": "",
-              "javaVersion": "25.3.4.1",
+              "javaVersion": "25.4.4.1",
               "distribution": "graalvm"
             },
             "linux-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/d75cde831a59ca82173575b604ccad86/redirect",
-              "size": "366.7 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/7de42960b349862d8544c34cff78859e/redirect",
+              "size": "366.8 MB",
               "sha256": "",
-              "javaVersion": "25.3.4.1",
+              "javaVersion": "25.4.4.1",
               "distribution": "graalvm"
             },
             "linux-arm64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/bb73df5e53ad5c37db58ac172ed23a51/redirect",
-              "size": "339.8 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/88ac5aebf73945d86192016ec83a9869/redirect",
+              "size": "340.1 MB",
               "sha256": "",
-              "javaVersion": "25.3.4.1",
+              "javaVersion": "25.4.4.1",
               "distribution": "graalvm"
             },
             "macos-x64": {
@@ -527,10 +543,10 @@
               "distribution": "graalvm"
             },
             "macos-arm64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/ecd0734172a900fbb355892523014787/redirect",
-              "size": "349.0 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/86fadda6892abe63ee2f74c73dd185a9/redirect",
+              "size": "349.3 MB",
               "sha256": "",
-              "javaVersion": "25.3.4.1",
+              "javaVersion": "25.4.4.1",
               "distribution": "graalvm"
             }
           },
@@ -686,47 +702,47 @@
           },
           "11": {
             "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/c7d0435cc03a259b3bf5207cbe3957dc/redirect",
-              "size": "184.6 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/e062af820181db875e521049d03dccb3/redirect",
+              "size": "182.5 MB",
               "sha256": "",
-              "javaVersion": "11.0.31",
+              "javaVersion": "11.0.32",
               "distribution": "dragonwell"
             },
             "linux-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/be567a654156be2070aab44eb2515920/redirect",
-              "size": "189.3 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/c3de35c4c91353d2fee63e67ff86a944/redirect",
+              "size": "185.9 MB",
               "sha256": "",
-              "javaVersion": "11.0.31",
+              "javaVersion": "11.0.32",
               "distribution": "dragonwell"
             },
             "linux-arm64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/c5d5cf44d99fab04abd2d73c74563555/redirect",
-              "size": "186.0 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/614c786eb3aeefa067a88b2fcfd7d6ba/redirect",
+              "size": "182.3 MB",
               "sha256": "",
-              "javaVersion": "11.0.31",
+              "javaVersion": "11.0.32",
               "distribution": "dragonwell"
             }
           },
           "8": {
             "windows-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/b69d64c26e4ea89846f04c77b79e700a/redirect",
+              "url": "https://api.foojay.io/disco/v3.0/ids/00e7b89ebf39e405416d8a1f2d1a0ee9/redirect",
               "size": "100.2 MB",
               "sha256": "",
-              "javaVersion": "8.0.492",
+              "javaVersion": "8.0.502",
               "distribution": "dragonwell"
             },
             "linux-x64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/661b1697196ba80d46d0cc33f9150d0c/redirect",
-              "size": "98.1 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/fbc88e6ffde9eb6201625b9e3cb55745/redirect",
+              "size": "98.7 MB",
               "sha256": "",
-              "javaVersion": "8.0.492",
+              "javaVersion": "8.0.502",
               "distribution": "dragonwell"
             },
             "linux-arm64": {
-              "url": "https://api.foojay.io/disco/v3.0/ids/c92ff2da8278f9486f326afbef30facc/redirect",
-              "size": "97.5 MB",
+              "url": "https://api.foojay.io/disco/v3.0/ids/ced2aae9240f1bbf1d1f04b07f64a8ec/redirect",
+              "size": "97.6 MB",
               "sha256": "",
-              "javaVersion": "8.0.492",
+              "javaVersion": "8.0.502",
               "distribution": "dragonwell"
             }
           }
@@ -737,6 +753,15 @@
         "description": "Official OpenJDK builds",
         "recommended": true,
         "versions": {
+          "27": {
+            "macos-arm64": {
+              "url": "https://api.foojay.io/disco/v3.0/ids/2fe1179149ce78d7c07cfe88dce5bee3/redirect",
+              "size": "209.1 MB",
+              "sha256": "",
+              "javaVersion": "27+35",
+              "distribution": "oracle_open_jdk"
+            }
+          },
           "25": {
             "windows-x64": {
               "url": "https://api.foojay.io/disco/v3.0/ids/c670ba1eded2c9693e9102e0bb673e60/redirect",
